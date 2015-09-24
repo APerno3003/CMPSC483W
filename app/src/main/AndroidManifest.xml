@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Mode1Activity"
+            android:label="@string/title_activity_mode1" >
+        </activity>
+        <activity
+            android:name=".Mode2Activity"
+            android:label="@string/title_activity_mode2" >
+        </activity>
+        <activity
+            android:name=".Mode3Activity"
+            android:label="@string/title_activity_mode3" >
+        </activity>
     </application>
 
 </manifest>
