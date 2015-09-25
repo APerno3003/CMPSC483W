@@ -19,14 +19,47 @@
         <activity
             android:name=".Mode1Activity"
             android:label="@string/title_activity_mode1" >
+            <intent-filter>
+                <action android:name="Mode1Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Mode2Activity"
             android:label="@string/title_activity_mode2" >
+            <intent-filter>
+                <action android:name="Mode2Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Mode3Activity"
             android:label="@string/title_activity_mode3" >
+            <intent-filter>
+                <action android:name="Mode3Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CopyrightActivity"
+            android:label="@string/title_activity_copyright" >
+            <intent-filter>
+                <action android:name="CopyrightActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+            <intent-filter>
+                <action android:name="SettingsActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 

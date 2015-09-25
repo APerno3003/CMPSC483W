@@ -7,21 +7,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class Mode3Activity extends AppCompatActivity implements View.OnClickListener{
-    Button Mode3BackButton;
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
+    Button SettingsBackButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_mode3);
-        Mode3BackButton = (Button) findViewById(R.id.Mode3BackButton);
-        Mode3BackButton.setOnClickListener(this);
+        setContentView(R.layout.activity_settings);
+        SettingsBackButton = (Button) findViewById(R.id.SettingsBackButton);
+        SettingsBackButton.setOnClickListener(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mode3, menu);
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
     }
 
@@ -40,15 +40,16 @@ public class Mode3Activity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
-    private void Mode3BackButtonOnClick() {
+    private void SettingsBackButtonOnClick() {
         finish();
     }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.Mode3BackButton:
-                Mode3BackButtonOnClick();
+            case R.id.SettingsBackButton:
+                SettingsBackButtonOnClick();
                 break;
         }
     }

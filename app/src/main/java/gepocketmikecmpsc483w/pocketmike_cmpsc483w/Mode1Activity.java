@@ -44,8 +44,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
-    public void Mode1Activity(View view) {
-    }
 
     private void Mode1BackButtonOnClick() {
         finish();

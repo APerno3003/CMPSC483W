@@ -46,8 +46,7 @@ public class Mode2Activity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-    public void Mode2Activity(View view) {
-    }
+
 
     @Override
     public void onClick(View v) {
