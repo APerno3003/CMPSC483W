@@ -12,7 +12,7 @@ public class Mode3Activity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_mode3);
         Mode3BackButton = (Button) findViewById(R.id.Mode3BackButton);
         Mode3BackButton.setOnClickListener(this);

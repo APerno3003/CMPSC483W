@@ -14,7 +14,7 @@ public class Mode2Activity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_mode2);
         Mode2BackButton = (Button) findViewById(R.id.Mode2BackButton);
         Mode2BackButton.setOnClickListener(this);

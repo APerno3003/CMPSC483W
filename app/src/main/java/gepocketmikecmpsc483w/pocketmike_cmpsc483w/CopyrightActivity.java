@@ -12,7 +12,7 @@ public class CopyrightActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_copyright);
         CopyrightBackButton = (Button)findViewById(R.id.CopyrightBackButton);
         CopyrightBackButton.setOnClickListener(this);

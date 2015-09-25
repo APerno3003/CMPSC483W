@@ -12,7 +12,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_settings);
         SettingsBackButton = (Button) findViewById(R.id.SettingsBackButton);
         SettingsBackButton.setOnClickListener(this);
