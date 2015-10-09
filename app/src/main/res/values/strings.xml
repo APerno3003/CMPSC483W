@@ -10,14 +10,17 @@
     <string name="SettingsText">Settings</string>
     <string name="CopyrightText">Copyright</string>
     <string name="TimeOfFlightText">Time of Flight</string>
-    <string name="defaultNumbers">0.00</string>
+    <string name="MeasurementText">Measurement</string>
+    <string name="defaultNumbers">000.000</string>
     <string name="BackText">Back</string>
     <string name="WorkInProgressText">Work in Progress</string>
-
+    <string name="defaultUnits">mm</string>
+    <string name="GetDataText">Get Data</string>
 
     <string name="title_activity_mode1">Mode1Activity</string>
     <string name="title_activity_mode2">Mode2Activity</string>
     <string name="title_activity_mode3">Mode3Activity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_copyright">CopyrightActivity</string>
+    <string name="ChangeUnitsText">Change Units</string>
 </resources>

@@ -1,0 +1,82 @@
+package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
+
+/**
+ * Created by Anthony on 10/7/2015.
+ */
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.ParcelUuid;
+import android.util.Log;
+
+import java.util.Set;
+import java.util.UUID;
+
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
+
+public class BluetoothConnection {
+
+    private String deviceName;
+    private String deviceAddress;
+    private UUID deviceUuid;
+    private BluetoothDevice device;
+    private BluetoothAdapter adapter;
+
+    // Event handling
+    private Handler commandProcessedHandler;
+
+    public BluetoothConnection(String deviceName) {
+        this.deviceName = deviceName;
+        initAdapter();
+    }
+
+    public boolean initAdapter() {
+        adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter == null) {
+            Log.d("PocketMike_CMPSC483W", "Bluetooth adapter not found");
+            return false;
+        } else {
+            Log.d("PocketMike_CMPSC483W", "Bluetooth adapter found");
+            return true;
+        }
+    }
+
+    public void startReading() {
+
+        ConnectThread connectThread = new ConnectThread(this.device);
+        connectThread.setProcessedCommandHandler(this.commandProcessedHandler);
+        connectThread.start();
+    }
+
+    public BluetoothAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(BluetoothAdapter adapter) {
+        this.adapter = adapter;
+    }
+
+    public void findDevice() {
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+
+                if (device.getName().equals(this.deviceName)) {
+                    this.deviceAddress = device.getAddress();
+                    this.device = device;
+
+                    // Find UUID of device
+                    for (ParcelUuid uuid : device.getUuids()) {
+                        this.deviceUuid = uuid.getUuid();
+                    }
+                }
+            }
+        }
+    }
+
+    public void setCommandProcessedHandler(Handler commandProcessedHandler) {
+        this.commandProcessedHandler = commandProcessedHandler;
+    }
+
+}
