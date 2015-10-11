@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.Set;
 
 import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
@@ -63,6 +65,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {
                 //startBluetooth();
+                Log.d("PocketMike_CMPSC483W", "Bluetooth is on");
             }
 
         }
@@ -136,37 +139,44 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         if((unitsText.getText().toString()).equals("mm"))
         {
             unitsText.setText("in");
+            MeasurementNumbersText.setText("0.000");
         }
         else
         {
 
             unitsText.setText("mm");
+            MeasurementNumbersText.setText("000");
         }
     }
 
     private void GetValueOnPocketMikeScreenButtonOnClick() {
-
+        currentValueOnScreen = 0;
         if(((unitsText.getText().toString())).equals("mm")) {
             int upper = 250;
-            int lower = 0;
+            int lower = 1;
             currentValueOnScreen = (int) (Math.random() * (upper - lower)) + lower;
-            MeasurementNumbersText.setText("" + (int) currentValueOnScreen);
+            MeasurementNumbersText.setText(String.valueOf( (int) currentValueOnScreen));
         }
         else
         {
             int upper = 9;
             int lower = 0;
+            int temp;
             int integerValue = (int) (Math.random() * (upper - lower)) + lower;
-            currentValueOnScreen = Math.random() + 0.04;
-            currentValueOnScreen = currentValueOnScreen * 1000;
-            currentValueOnScreen = (int) currentValueOnScreen;
-            currentValueOnScreen = currentValueOnScreen / 1000;
-            currentValueOnScreen = integerValue + currentValueOnScreen;
-            MeasurementNumbersText.setText("" + currentValueOnScreen);
+            if(integerValue < 0.04) {
+                currentValueOnScreen = 0.04;
+            }
+            currentValueOnScreen = integerValue + currentValueOnScreen + Math.random();
+            MeasurementNumbersText.setText(String.valueOf(roundToFourDecimals(currentValueOnScreen)));
 
         }
     }
 
+
+    double roundToFourDecimals(double d) {
+        DecimalFormat fourDForm = new DecimalFormat("#.####");
+        return Double.valueOf(fourDForm.format(d));
+    }
 
     @Override
     public void onClick(View v) {
