@@ -163,10 +163,11 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             int lower = 0;
             int temp;
             int integerValue = (int) (Math.random() * (upper - lower)) + lower;
-            if(integerValue < 0.04) {
+            currentValueOnScreen = Math.random();
+            if(currentValueOnScreen < 0.04 && integerValue == 0) {
                 currentValueOnScreen = 0.04;
             }
-            currentValueOnScreen = integerValue + currentValueOnScreen + Math.random();
+            currentValueOnScreen = integerValue + currentValueOnScreen;
             MeasurementNumbersText.setText(String.valueOf(roundToFourDecimals(currentValueOnScreen)));
 
         }
