@@ -31,6 +31,8 @@ import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
 public class Mode1Activity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Bluetooth
+    private final static int defaultLatitude = 360;
+    private final static int defaultLongitude = 360;
     private final static int REQUEST_ENABLE_BT = 1;
     private double currentValueOnScreen = 0.00;
     private BluetoothConnection btConnection;
@@ -38,7 +40,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private Button Mode1BackButton;
     private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
     private Button ChangeUnitsButton;
-    private Button GetCurrentLocationButton;
+    private Button UpdateCurrentLocationButton;
     private TextView MeasurementNumbersText;
     private TextView unitsText;
 
@@ -65,8 +67,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         ChangeUnitsButton = (Button) findViewById(R.id.ChangeUnitsButton);
         ChangeUnitsButton.setOnClickListener(this);
 
-        GetCurrentLocationButton = (Button) findViewById(R.id.GetCurrentLocationButton);
-        GetCurrentLocationButton.setOnClickListener(this);
+        UpdateCurrentLocationButton = (Button) findViewById(R.id.UpdateCurrentLocationButton);
+        UpdateCurrentLocationButton.setOnClickListener(this);
 
         //connect Text in layout to text in java file so we can edit them
         MeasurementNumbersText = (TextView) findViewById(R.id.MeasurementNumbersText);
@@ -218,18 +220,29 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             case R.id.ChangeUnitsButton:
                 ChangeUnitsButtonOnClick();
                 break;
-            case R.id.GetCurrentLocationButton:
-                GetCurrentLocationButtonOnClick();
+            case R.id.UpdateCurrentLocationButton:
+                UpdateCurrentLocationButtonOnClick();
                 break;
         }
     }
 
-    private void GetCurrentLocationButtonOnClick() {
+    private void UpdateCurrentLocationButtonOnClick() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
+        Log.d("PocketMike_CMPSC483W", "Alice");
         if (mLastLocation != null) {
             valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
             valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
+            Log.d("PocketMike_CMPSC483W", "madness");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Current Location data cannot be found latitude and longtiude will be set to 360.", Toast.LENGTH_LONG)
+                    .show();
+            valueOfLatitude.setText(String.valueOf(defaultLatitude));
+            valueOfLongitude.setText(String.valueOf(defaultLongitude));
+            Log.d("PocketMike_CMPSC483W", "returns");
         }
     }
 
@@ -272,11 +285,22 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     public void onConnected(Bundle bundle) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
+        Log.d("PocketMike_CMPSC483W", "Alice");
         if (mLastLocation != null) {
-           // valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
-            //valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
-            Log.d("PocketMike_CMPSC483W", "Alice");
+            valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
+            valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
+            Log.d("PocketMike_CMPSC483W", "in");
         }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Current Location data cannot be found latitude and longtiude will be set to 360.", Toast.LENGTH_LONG)
+                    .show();
+            valueOfLatitude.setText(String.valueOf(defaultLatitude));
+            valueOfLongitude.setText(String.valueOf(defaultLongitude));
+            Log.d("PocketMike_CMPSC483W", "wonderland");
+        }
+
     }
     @Override
     public void onConnectionSuspended(int i) {

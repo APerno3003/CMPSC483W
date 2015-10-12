@@ -72,8 +72,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/getCurrentLocationText"
-        android:id="@+id/GetCurrentLocationButton"
+        android:text="@string/updateCurrentLocationText"
+        android:id="@+id/UpdateCurrentLocationButton"
         android:layout_above="@+id/Mode1BackButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

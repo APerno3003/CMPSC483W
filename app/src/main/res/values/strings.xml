@@ -24,6 +24,7 @@
     <string name="title_activity_copyright">CopyrightActivity</string>
     <string name="ChangeUnitsText">Change Units</string>
     <string name="getCurrentLocationText">Get Current Location</string>
+    <string name="updateCurrentLocationText">Update Current Location</string>
     <string name="currentLocationText">Current Location</string>
     <string name="longitudeText">Longitude:</string>
     <string name="latitudeText">Latitude:</string>
