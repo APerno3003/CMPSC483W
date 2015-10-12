@@ -6,44 +6,56 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.location.Location;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import java.text.DecimalFormat;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.util.Set;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
 
-public class Mode1Activity extends AppCompatActivity implements View.OnClickListener {
+public class Mode1Activity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // Bluetooth
     private final static int REQUEST_ENABLE_BT = 1;
     private double currentValueOnScreen = 0.00;
-    BluetoothConnection btConnection;
+    private BluetoothConnection btConnection;
 
-    Button Mode1BackButton;
-    Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
-    Button ChangeUnitsButton;
-    TextView MeasurementNumbersText;
-    TextView unitsText;
+    private Button Mode1BackButton;
+    private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
+    private Button ChangeUnitsButton;
+    private Button GetCurrentLocationButton;
+    private TextView MeasurementNumbersText;
+    private TextView unitsText;
+
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private TextView valueOfLatitude;
+    private TextView valueOfLongitude;
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+    public static final String TAG = Mode1Activity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_mode1);
+
+        //Connect Buttons in layout to buttons in java file so we can listen to them
         Mode1BackButton = (Button) findViewById(R.id.Mode1BackButton);
         Mode1BackButton.setOnClickListener(this);
 
@@ -53,9 +65,24 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         ChangeUnitsButton = (Button) findViewById(R.id.ChangeUnitsButton);
         ChangeUnitsButton.setOnClickListener(this);
 
+        GetCurrentLocationButton = (Button) findViewById(R.id.GetCurrentLocationButton);
+        GetCurrentLocationButton.setOnClickListener(this);
+
+        //connect Text in layout to text in java file so we can edit them
         MeasurementNumbersText = (TextView) findViewById(R.id.MeasurementNumbersText);
         unitsText = (TextView) findViewById(R.id.unitsText);
+        valueOfLatitude = (TextView) findViewById(R.id.valueOfLatitude);
+        valueOfLongitude = (TextView) findViewById(R.id.valueOfLongitude);
 
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+            // Building the GoogleApi client
+
+            buildGoogleApiClient();
+
+        }
+
+        //Run bluetooth stuff
         btConnection = new BluetoothConnection("HC-06");
         if (btConnection.getAdapter() != null) {
 
@@ -71,7 +98,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-
 
 
     @Override
@@ -96,6 +122,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
+    private void hideComments()
+    {
    /* private void enableBluetooth()
     {
         //check if device supports Bluetooth
@@ -129,42 +157,39 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
 
     }*/
+    }
 
-
+    //if pressed brings you back to the main activity
     private void Mode1BackButtonOnClick() {
         finish();
     }
 
+    //Allows that user to change the current units the measurement is being taken in
     private void ChangeUnitsButtonOnClick() {
-        if((unitsText.getText().toString()).equals("mm"))
-        {
+        if ((unitsText.getText().toString()).equals("mm")) {
             unitsText.setText("in");
             MeasurementNumbersText.setText("0.000");
-        }
-        else
-        {
+        } else {
 
             unitsText.setText("mm");
             MeasurementNumbersText.setText("000");
         }
     }
 
+    //right now it generates a random number that is supposed to be vaild pocketmike thicknessdata
     private void GetValueOnPocketMikeScreenButtonOnClick() {
         currentValueOnScreen = 0;
-        if(((unitsText.getText().toString())).equals("mm")) {
+        if (((unitsText.getText().toString())).equals("mm")) {
             int upper = 250;
             int lower = 1;
             currentValueOnScreen = (int) (Math.random() * (upper - lower)) + lower;
-            MeasurementNumbersText.setText(String.valueOf( (int) currentValueOnScreen));
-        }
-        else
-        {
+            MeasurementNumbersText.setText(String.valueOf((int) currentValueOnScreen));
+        } else {
             int upper = 9;
             int lower = 0;
-            int temp;
             int integerValue = (int) (Math.random() * (upper - lower)) + lower;
             currentValueOnScreen = Math.random();
-            if(currentValueOnScreen < 0.04 && integerValue == 0) {
+            if (currentValueOnScreen < 0.04 && integerValue == 0) {
                 currentValueOnScreen = 0.04;
             }
             currentValueOnScreen = integerValue + currentValueOnScreen;
@@ -174,11 +199,13 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    //round the precision to one interger and 4 decimal points
     double roundToFourDecimals(double d) {
         DecimalFormat fourDForm = new DecimalFormat("#.####");
         return Double.valueOf(fourDForm.format(d));
     }
 
+    //is the action listener for all the buttons and calls correct function based on case
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -191,10 +218,75 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             case R.id.ChangeUnitsButton:
                 ChangeUnitsButtonOnClick();
                 break;
+            case R.id.GetCurrentLocationButton:
+                GetCurrentLocationButtonOnClick();
+                break;
         }
     }
 
+    private void GetCurrentLocationButtonOnClick() {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
+            valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
+        }
+    }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+           // valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
+            //valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
+            Log.d("PocketMike_CMPSC483W", "Alice");
+        }
+    }
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 
 
 }

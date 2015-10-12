@@ -14,10 +14,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/MeasurementText"
         android:id="@+id/MeasurementText"
+        android:textSize="40sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="40sp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,11 +26,9 @@
         android:text="@string/defaultNumbers"
         android:id="@+id/MeasurementNumbersText"
         android:textSize="40sp"
-        android:layout_alignTop="@+id/unitsText"
+        android:layout_below="@+id/MeasurementText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="47dp"
-        android:layout_marginStart="47dp" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -47,8 +45,7 @@
         android:layout_height="wrap_content"
         android:text="@string/GetDataText"
         android:id="@+id/GetValueOnPocketMikeScreenButton"
-        android:layout_marginTop="58dp"
-        android:layout_below="@+id/unitsText"
+        android:layout_alignTop="@+id/ChangeUnitsButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -59,17 +56,78 @@
         android:text="@string/defaultUnits"
         android:id="@+id/unitsText"
         android:textSize="40sp"
-        android:layout_marginTop="45dp"
         android:layout_below="@+id/MeasurementText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/GetValueOnPocketMikeScreenButton"
+        android:layout_alignEnd="@+id/GetValueOnPocketMikeScreenButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ChangeUnitsText"
         android:id="@+id/ChangeUnitsButton"
-        android:layout_alignTop="@+id/GetValueOnPocketMikeScreenButton"
+        android:layout_below="@+id/MeasurementNumbersText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/getCurrentLocationText"
+        android:id="@+id/GetCurrentLocationButton"
+        android:layout_above="@+id/Mode1BackButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/currentLocationText"
+        android:id="@+id/currentLocationText"
+        android:textSize="30sp"
+        android:layout_below="@+id/ChangeUnitsButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="52dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/latitudeText"
+        android:id="@+id/latitudeText"
+        android:layout_below="@+id/currentLocationText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/longitudeText"
+        android:id="@+id/longitudeText"
+        android:layout_below="@+id/latitudeText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/defaultNumbers"
+        android:id="@+id/valueOfLatitude"
+        android:layout_alignTop="@+id/latitudeText"
+        android:layout_alignRight="@+id/MeasurementText"
+        android:layout_alignEnd="@+id/MeasurementText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/defaultNumbers"
+        android:id="@+id/valueOfLongitude"
+        android:layout_below="@+id/valueOfLatitude"
+        android:layout_alignLeft="@+id/valueOfLatitude"
+        android:layout_alignStart="@+id/valueOfLatitude" />
+
 </RelativeLayout>
