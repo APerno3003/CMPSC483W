@@ -114,20 +114,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/defaultNumbers"
+        android:text="@string/defaultLatitude"
         android:id="@+id/valueOfLatitude"
-        android:layout_alignTop="@+id/latitudeText"
-        android:layout_alignRight="@+id/MeasurementText"
-        android:layout_alignEnd="@+id/MeasurementText" />
+        android:layout_below="@+id/currentLocationText"
+        android:layout_toRightOf="@+id/MeasurementNumbersText"
+        android:layout_toEndOf="@+id/MeasurementNumbersText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/defaultNumbers"
+        android:text="@string/defaultLongitude"
         android:id="@+id/valueOfLongitude"
         android:layout_below="@+id/valueOfLatitude"
-        android:layout_alignLeft="@+id/valueOfLatitude"
-        android:layout_alignStart="@+id/valueOfLatitude" />
+        android:layout_toRightOf="@+id/MeasurementNumbersText" />
 
 </RelativeLayout>

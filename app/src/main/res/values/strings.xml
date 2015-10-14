@@ -12,6 +12,8 @@
     <string name="TimeOfFlightText">Time of Flight</string>
     <string name="MeasurementText">Measurement</string>
     <string name="defaultNumbers">000.000</string>
+    <string name="defaultLatitude">360</string>
+    <string name="defaultLongitude">360</string>
     <string name="BackText">Back</string>
     <string name="WorkInProgressText">Work in Progress</string>
     <string name="defaultUnits">mm</string>

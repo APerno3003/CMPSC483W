@@ -227,25 +227,31 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
 
     private void UpdateCurrentLocationButtonOnClick() {
+        findAndDisplayLocation();
+    }
+
+    //Trys to find your currentLocation and if it finds it displays it
+    private void findAndDisplayLocation()
+    {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-        Log.d("PocketMike_CMPSC483W", "Alice");
+        Log.d("PocketMike_CMPSC483W", "Trying to Find Current Location");
         if (mLastLocation != null) {
             valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
             valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
-            Log.d("PocketMike_CMPSC483W", "madness");
+            Log.d("PocketMike_CMPSC483W", "Current Location Found");
         }
         else
         {
             Toast.makeText(getApplicationContext(),
-                    "Current Location data cannot be found latitude and longtiude will be set to 360.", Toast.LENGTH_LONG)
+                    "Current Location data cannot be found. Latitude and longtiude will be set to the default value of 360.", Toast.LENGTH_LONG)
                     .show();
             valueOfLatitude.setText(String.valueOf(defaultLatitude));
             valueOfLongitude.setText(String.valueOf(defaultLongitude));
-            Log.d("PocketMike_CMPSC483W", "returns");
+            Log.d("PocketMike_CMPSC483W", "Couldn't Find Current Location");
         }
-    }
 
+    }
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -283,23 +289,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        Log.d("PocketMike_CMPSC483W", "Alice");
-        if (mLastLocation != null) {
-            valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
-            valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
-            Log.d("PocketMike_CMPSC483W", "in");
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Current Location data cannot be found latitude and longtiude will be set to 360.", Toast.LENGTH_LONG)
-                    .show();
-            valueOfLatitude.setText(String.valueOf(defaultLatitude));
-            valueOfLongitude.setText(String.valueOf(defaultLongitude));
-            Log.d("PocketMike_CMPSC483W", "wonderland");
-        }
+        findAndDisplayLocation();
 
     }
     @Override
