@@ -196,7 +196,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             }
             currentValueOnScreen = integerValue + currentValueOnScreen;
             MeasurementNumbersText.setText(String.valueOf(roundToFourDecimals(currentValueOnScreen)));
-
         }
     }
 

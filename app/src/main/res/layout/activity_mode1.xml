@@ -117,8 +117,7 @@
         android:text="@string/defaultLatitude"
         android:id="@+id/valueOfLatitude"
         android:layout_below="@+id/currentLocationText"
-        android:layout_toRightOf="@+id/MeasurementNumbersText"
-        android:layout_toEndOf="@+id/MeasurementNumbersText" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -127,6 +126,6 @@
         android:text="@string/defaultLongitude"
         android:id="@+id/valueOfLongitude"
         android:layout_below="@+id/valueOfLatitude"
-        android:layout_toRightOf="@+id/MeasurementNumbersText" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
