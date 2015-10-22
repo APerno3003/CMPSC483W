@@ -74,9 +74,10 @@
         android:layout_height="wrap_content"
         android:text="@string/updateCurrentLocationText"
         android:id="@+id/UpdateCurrentLocationButton"
-        android:layout_above="@+id/Mode1BackButton"
+        android:layout_below="@+id/longitudeText"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -96,7 +97,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/latitudeText"
         android:id="@+id/latitudeText"
-        android:layout_below="@+id/currentLocationText"
+        android:layout_below="@+id/longitudeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -106,7 +107,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/longitudeText"
         android:id="@+id/longitudeText"
-        android:layout_below="@+id/latitudeText"
+        android:layout_below="@+id/currentLocationText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -116,8 +117,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/defaultLatitude"
         android:id="@+id/valueOfLatitude"
-        android:layout_below="@+id/currentLocationText"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/valueOfLongitude"
+        android:layout_alignLeft="@+id/valueOfLongitude"
+        android:layout_alignStart="@+id/valueOfLongitude"
+ />
 
     <TextView
         android:layout_width="wrap_content"
@@ -125,7 +128,17 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/defaultLongitude"
         android:id="@+id/valueOfLongitude"
-        android:layout_below="@+id/valueOfLatitude"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/currentLocationText"
+        android:layout_alignRight="@+id/currentLocationText"
+        android:layout_alignEnd="@+id/currentLocationText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/GetPocket"
+        android:id="@+id/GetPocketButton"
+        android:layout_alignTop="@+id/Mode1BackButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -16,6 +16,16 @@ public class ConnectThread extends Thread {
     private BluetoothDevice device;
     private Handler handler;
 
+    public ConnectedThread getConnectedThread() {
+        return connectedThread;
+    }
+
+    public void setConnectedThread(ConnectedThread connectedThread) {
+        this.connectedThread = connectedThread;
+    }
+
+    public ConnectedThread connectedThread;
+
     public ConnectThread(BluetoothDevice device) {
         this.device = device;
 
@@ -38,7 +48,8 @@ public class ConnectThread extends Thread {
         try {
             this.socket.connect();
 
-            ConnectedThread connectedThread = new ConnectedThread(this.socket);
+            //ConnectedThread connectedThread = new ConnectedThread(this.socket);
+            connectedThread = new ConnectedThread(this.socket);
             connectedThread.setCommandProcessedHandler(this.handler);
             connectedThread.start();
         } catch (IOException e) {

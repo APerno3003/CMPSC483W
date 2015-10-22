@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,11 +39,13 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private final static int REQUEST_ENABLE_BT = 1;
     private double currentValueOnScreen = 0.00;
     private BluetoothConnection btConnection;
+    private BluetoothAdapter btAdapter;
 
     private Button Mode1BackButton;
     private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
     private Button ChangeUnitsButton;
     private Button UpdateCurrentLocationButton;
+    private Button GetPocketButton;
     private TextView MeasurementNumbersText;
     private TextView unitsText;
 
@@ -70,6 +75,9 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         UpdateCurrentLocationButton = (Button) findViewById(R.id.UpdateCurrentLocationButton);
         UpdateCurrentLocationButton.setOnClickListener(this);
 
+        GetPocketButton = (Button) findViewById(R.id.GetPocketButton);
+        GetPocketButton.setOnClickListener(this);
+
         //connect Text in layout to text in java file so we can edit them
         MeasurementNumbersText = (TextView) findViewById(R.id.MeasurementNumbersText);
         unitsText = (TextView) findViewById(R.id.unitsText);
@@ -77,28 +85,45 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         valueOfLongitude = (TextView) findViewById(R.id.valueOfLongitude);
 
         // First we need to check availability of play services
+        Log.d("PocketMike_CMPSC483W", "Trying to connect to Google Play Store");
         if (checkPlayServices()) {
             // Building the GoogleApi client
+            Log.d("PocketMike_CMPSC483W", "Successfully connected to Google Play Store");
 
             buildGoogleApiClient();
 
         }
 
         //Run bluetooth stuff
-        btConnection = new BluetoothConnection("HC-06");
+        btConnection = new BluetoothConnection("PMike-00");
+        Log.d("PocketMike_CMPSC483W", "Running Bluetooth stuff");
+        //btConnection.findDevice();
         if (btConnection.getAdapter() != null) {
 
             // Check if bluetooth is enabled, if not ask user to enable it.
             if (!btConnection.getAdapter().isEnabled()) {
+                Log.d("PocketMike_CMPSC483W", "Start Bluetooth1");
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {
-                //startBluetooth();
-                Log.d("PocketMike_CMPSC483W", "Bluetooth is on");
+                startBluetooth();
+                Log.d("PocketMike_CMPSC483W", "Start Bluetooth2");
+
             }
 
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check if we're responding to enable bluetooth dialog
+        if (requestCode == REQUEST_ENABLE_BT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                startBluetooth();
+            }
+        }
     }
 
 
@@ -122,43 +147,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void hideComments()
-    {
-   /* private void enableBluetooth()
-    {
-        //check if device supports Bluetooth
-        if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
-            return;
-        }
-
-        //if device supports Bluetooth
-        //Check if Bluetooth is enabled
-        //if it isn't enabled enable it
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        //Check if the Bluetooth device you want to access is already known to the phone
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        // If there are paired devices
-        if (pairedDevices.size() > 0) {
-            // Loop through paired devices
-            // Add the name and address to an array adapter to show in a ListView
-            for (BluetoothDevice device : pairedDevices) {
-                mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-            }
-        }
-
-        //if the Bluetooth device isn't know try to discover it
-
-
-
-
-    }*/
     }
 
     //if pressed brings you back to the main activity
@@ -222,9 +210,15 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             case R.id.UpdateCurrentLocationButton:
                 UpdateCurrentLocationButtonOnClick();
                 break;
+            case R.id.GetPocketButton:
+                GetPocketButtonOnClick();
+                break;
         }
     }
-
+    private void GetPocketButtonOnClick() {
+        Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
+        btConnection.sendCommand();
+    }
     private void UpdateCurrentLocationButtonOnClick() {
         findAndDisplayLocation();
     }
@@ -252,6 +246,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
     protected synchronized void buildGoogleApiClient() {
+        Log.d("PocketMike_CMPSC483W", "Building Google API Client");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -301,6 +296,11 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void startBluetooth() {
+        btConnection.findDevice();
+        btConnection.setCommandProcessedHandler(new Handler());
+        btConnection.startReading();
 
+    }
 }
 

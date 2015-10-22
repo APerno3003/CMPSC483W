@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.ParcelUuid;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ public class BluetoothConnection {
     private UUID deviceUuid;
     private BluetoothDevice device;
     private BluetoothAdapter adapter;
+    ConnectThread connectThread;
 
     // Event handling
     private Handler commandProcessedHandler;
@@ -44,9 +47,11 @@ public class BluetoothConnection {
 
     public void startReading() {
 
-        ConnectThread connectThread = new ConnectThread(this.device);
+        //ConnectThread connectThread = new ConnectThread(this.device);
+        connectThread = new ConnectThread(this.device);
         connectThread.setProcessedCommandHandler(this.commandProcessedHandler);
         connectThread.start();
+
     }
 
     public BluetoothAdapter getAdapter() {
@@ -78,5 +83,21 @@ public class BluetoothConnection {
     public void setCommandProcessedHandler(Handler commandProcessedHandler) {
         this.commandProcessedHandler = commandProcessedHandler;
     }
+    public void sendCommand(){
+        Log.d("PocketMike_CMPSC483W", "BluetoothConnection sendCommand");
+
+        //String commandString = "rd\r";
+        String commandString = "bl 1\r"; //In order for the pocketMike to receive commands correctly the string must end with \r
+        //String commandString = "un";
+        //String commandString = "un\n";
+        //String commandString = "un\r";
+        //String commandString = "un\r\n";
+        byte[] commandBytes = commandString.getBytes();
+        connectThread.getConnectedThread().write(commandBytes);
+
+    }
+
+
+
 
 }

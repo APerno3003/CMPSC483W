@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +20,8 @@ public class ConnectedThread extends Thread {
     public Handler commandProcessedHandler;
     private final InputStream inputStream;
     private final OutputStream outputStream;
+    final int handlerState = 0;
+    final int MESSAGE_READ = 9999;
 
     public ConnectedThread(BluetoothSocket socket) {
         this.socket = socket;
@@ -35,49 +38,61 @@ public class ConnectedThread extends Thread {
 
         inputStream = tmpInputStream;
         outputStream = tmpOutputStream;
+
     }
 
-   /* public void run() {
-        Log.d("PocketMike_CMPSC483W", "Running ConnectedThread");
-
+    public void run() {
+        byte[] buffer = new byte[512];
+        int begin = 0;
+        int bytes;
+        StringBuilder readMessage = new StringBuilder();
         while (true) {
             try {
-                Reader reader = new InputStreamReader(inputStream, "US-ASCII");
-                String currentCommand = "";
-                int n;
+                //inputStream.reset();
+                bytes = inputStream.read(buffer);
+                String readed = new String(buffer, 0, bytes);
+                readMessage.append(readed);
+                Log.d("WSDFKALSFKAD", readMessage.toString());
+               /* if (readed.contains("\n")) {
+                    Log.d("Alice","MADness");
+                    this.commandProcessedHandler.obtainMessage(2, bytes, -1, readMessage.toString()).sendToTarget();
+                    readMessage.setLength(0);
+                }*/
 
-                // Keep reading stream character by character until we see a new line. Once we receive
-                // a new line character we know a full command has been sent. Pretty inefficient, but
-                // it works for now. A better protocol is to just have the size of the buffer be sent
-                // in the header of a buffer, and just read that many bytes. Requires you to keep track
-                // of an offset though.
-                while ((n = reader.read()) != -1) {
-                    char currentChar = (char) n;
 
-                    if (currentChar == '\n') {
-                        // If an event handler is given, send the handler a SensorCommand object containing the current command
-                        if (this.commandProcessedHandler != null) {
-                            //Log.d("PocketMike_CMPSC483W", "Found handler, sending message");
-                            if (currentCommand.charAt(0) == 'a') {
-                                SensorCommand sensorCommand = new SensorCommand(currentCommand);
-
-                                Message msg = this.commandProcessedHandler.obtainMessage(1, sensorCommand);
-                                this.commandProcessedHandler.sendMessage(msg);
-                            }
-                        } else {
-                            Log.d("PocketMike_CMPSC483W", "Could not find handler");
+               /* bytes += inputStream.read(buffer, bytes, buffer.length - bytes);
+                String alice = new String(buffer);
+                Log.d("ALICE", alice);
+                for(int i = begin; i < bytes; i++) {
+                    if(buffer[i] == "#".getBytes()[0]) {
+                        this.commandProcessedHandler.obtainMessage(1, begin, i, buffer).sendToTarget();
+                        begin = i + 1;
+                        if(i == bytes - 1) {
+                            bytes = 0;
+                            begin = 0;
                         }
-                        currentCommand = "";
-                    } else {
-                        currentCommand += currentChar;
                     }
-                }
+
+                }*/
+
             } catch (IOException e) {
-                Log.d("PocketMike_CMPSC483W", "Failed to read input stream");
                 break;
             }
         }
-    }*/
+    }
+    public void write(byte[] bytes) {
+        try {
+            outputStream.write(bytes);
+            outputStream.flush();
+        } catch (IOException e) { }
+    }
+
+    /* Call this from the main activity to shutdown the connection */
+    public void cancel() {
+        try {
+            socket.close();
+        } catch (IOException e) { }
+    }
 
     public void setCommandProcessedHandler(Handler handler) {
         this.commandProcessedHandler = handler;

@@ -18,7 +18,7 @@
     <string name="WorkInProgressText">Work in Progress</string>
     <string name="defaultUnits">mm</string>
     <string name="GetDataText">Get Data</string>
-
+    <string name="GetPocket">Get Pocket</string>
     <string name="title_activity_mode1">Mode1Activity</string>
     <string name="title_activity_mode2">Mode2Activity</string>
     <string name="title_activity_mode3">Mode3Activity</string>
