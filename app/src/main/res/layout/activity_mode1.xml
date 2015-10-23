@@ -115,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/defaultLatitude"
+        android:text="@string/startingLatitude"
         android:id="@+id/valueOfLatitude"
         android:layout_below="@+id/valueOfLongitude"
         android:layout_alignLeft="@+id/valueOfLongitude"
@@ -126,11 +126,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/defaultLongitude"
+        android:text="@string/startingLongitude"
         android:id="@+id/valueOfLongitude"
-        android:layout_below="@+id/currentLocationText"
-        android:layout_alignRight="@+id/currentLocationText"
-        android:layout_alignEnd="@+id/currentLocationText" />
+        android:layout_above="@+id/latitudeText"
+        android:layout_alignLeft="@+id/UpdateCurrentLocationButton"
+        android:layout_alignStart="@+id/UpdateCurrentLocationButton" />
 
     <Button
         android:layout_width="wrap_content"

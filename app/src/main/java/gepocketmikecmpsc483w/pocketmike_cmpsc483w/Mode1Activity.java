@@ -115,39 +115,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check if we're responding to enable bluetooth dialog
-        if (requestCode == REQUEST_ENABLE_BT) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                startBluetooth();
-            }
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mode1, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     //if pressed brings you back to the main activity
     private void Mode1BackButtonOnClick() {
@@ -276,6 +243,14 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    public void startBluetooth() {
+        btConnection.findDevice();
+        btConnection.setCommandProcessedHandler(new Handler());
+        btConnection.startReading();
+    }
+
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -297,11 +272,40 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void startBluetooth() {
-        btConnection.findDevice();
-        btConnection.setCommandProcessedHandler(new Handler());
-        btConnection.startReading();
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check if we're responding to enable bluetooth dialog
+        if (requestCode == REQUEST_ENABLE_BT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                startBluetooth();
+            }
+        }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_mode1, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 

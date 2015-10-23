@@ -22,6 +22,7 @@ public class ConnectedThread extends Thread {
     private final OutputStream outputStream;
     final int handlerState = 0;
     final int PocketMikeBufferSize = 24;
+    private Double pocketMikeReturnNumber;
 
     public ConnectedThread(BluetoothSocket socket) {
         this.socket = socket;
@@ -45,12 +46,21 @@ public class ConnectedThread extends Thread {
         byte[] buffer = new byte[PocketMikeBufferSize];
         //int begin = 0;
         int bytes;
-        StringBuilder readMessage = new StringBuilder();
+        //StringBuilder readMessage = new StringBuilder();
         while (true) {
             try {
                 bytes = inputStream.read(buffer);
                 String readed = new String(buffer, 0, bytes);
-                Log.d("PocketMike_CMPSC483W", readed.toString());
+                Log.d("PocketMike_CMPSC483W", readed);
+                try
+                {
+                    pocketMikeReturnNumber = Double.parseDouble(readed);
+                    Log.d("PocketMike_CMPSC483W", pocketMikeReturnNumber.toString());
+                }
+                catch(NumberFormatException nfe)
+                {
+                    Log.d("PocketMike_CMPSC483W", "FUCK THIS SHIT");
+                }
                 //readMessage.append(readed);
                 //Log.d("PocketMike_CMPSC483W", readMessage.toString());
 
@@ -74,8 +84,23 @@ public class ConnectedThread extends Thread {
         } catch (IOException e) { }
     }
 
+
+
+    //////////////////////////////////
+    /// GETS AND SETS
+    /////////////////////////////////
     public void setCommandProcessedHandler(Handler handler) {
         this.commandProcessedHandler = handler;
     }
+
+
+    public Double getPocketMikeReturnNumber() {
+        return pocketMikeReturnNumber;
+    }
+
+    public void setPocketMikeReturnNumber(Double pocketMikeReturnNumber) {
+        this.pocketMikeReturnNumber = pocketMikeReturnNumber;
+    }
+
 }
 

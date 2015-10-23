@@ -24,7 +24,7 @@ public class BluetoothConnection {
     private UUID deviceUuid;
     private BluetoothDevice device;
     private BluetoothAdapter adapter;
-    ConnectThread connectThread;
+    private ConnectThread connectThread;
 
     // Event handling
     private Handler commandProcessedHandler;
@@ -54,14 +54,6 @@ public class BluetoothConnection {
 
     }
 
-    public BluetoothAdapter getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(BluetoothAdapter adapter) {
-        this.adapter = adapter;
-    }
-
     public void findDevice() {
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
@@ -80,9 +72,7 @@ public class BluetoothConnection {
         }
     }
 
-    public void setCommandProcessedHandler(Handler commandProcessedHandler) {
-        this.commandProcessedHandler = commandProcessedHandler;
-    }
+
     public void sendCommand(String commandString){
         Log.d("PocketMike_CMPSC483W", "BluetoothConnection sendCommand " + commandString);
 
@@ -98,6 +88,26 @@ public class BluetoothConnection {
     }
 
 
+    //////////////////////////////////
+    /// GETS AND SETS
+    /////////////////////////////////
+    public BluetoothAdapter getAdapter() {
+        return adapter;
+    }
 
+    public void setAdapter(BluetoothAdapter adapter) {
+        this.adapter = adapter;
+    }
 
+    public void setCommandProcessedHandler(Handler commandProcessedHandler) {
+        this.commandProcessedHandler = commandProcessedHandler;
+    }
+
+    public ConnectThread getConnectThread() {
+        return connectThread;
+    }
+
+    public void setConnectThread(ConnectThread connectThread) {
+        this.connectThread = connectThread;
+    }
 }
