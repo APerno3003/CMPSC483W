@@ -83,11 +83,11 @@ public class BluetoothConnection {
     public void setCommandProcessedHandler(Handler commandProcessedHandler) {
         this.commandProcessedHandler = commandProcessedHandler;
     }
-    public void sendCommand(){
-        Log.d("PocketMike_CMPSC483W", "BluetoothConnection sendCommand");
+    public void sendCommand(String commandString){
+        Log.d("PocketMike_CMPSC483W", "BluetoothConnection sendCommand " + commandString);
 
         //String commandString = "rd\r";
-        String commandString = "bl 1\r"; //In order for the pocketMike to receive commands correctly the string must end with \r
+        //String commandString = "bl 1\r"; //In order for the pocketMike to receive commands correctly the string must end with \r
         //String commandString = "un";
         //String commandString = "un\n";
         //String commandString = "un\r";

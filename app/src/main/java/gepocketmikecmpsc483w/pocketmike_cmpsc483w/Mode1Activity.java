@@ -217,8 +217,9 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
     private void GetPocketButtonOnClick() {
         Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
-        btConnection.sendCommand();
+        btConnection.sendCommand("rd\r");
     }
+
     private void UpdateCurrentLocationButtonOnClick() {
         findAndDisplayLocation();
     }
