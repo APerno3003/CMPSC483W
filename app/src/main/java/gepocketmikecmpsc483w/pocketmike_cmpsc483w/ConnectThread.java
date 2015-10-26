@@ -2,6 +2,7 @@ package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
 
 /**
  * Created by Anthony on 10/7/2015.
+ * 
  */
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -57,7 +58,7 @@ public class ConnectThread extends Thread {
         }
     }
 
-    public void setProcessedCommandHandler(Handler handler) {
+    public void setCommandProcessedHandler(Handler handler) {
         this.handler = handler;
     }
 

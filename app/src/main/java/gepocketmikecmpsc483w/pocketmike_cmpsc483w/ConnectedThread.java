@@ -2,13 +2,14 @@ package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
 
 /**
  * Created by Anthony on 10/7/2015.
+ * 
  */
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
+import java.util.Observable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,18 +55,22 @@ public class ConnectedThread extends Thread {
                 Log.d("PocketMike_CMPSC483W", readed);
                 try
                 {
+
                     pocketMikeReturnNumber = Double.parseDouble(readed);
                     Log.d("PocketMike_CMPSC483W", pocketMikeReturnNumber.toString());
+                    Message msg = this.commandProcessedHandler.obtainMessage(1, pocketMikeReturnNumber);
+                    Log.d("PocketMike_CMPSC483W", msg.toString());
+                    this.commandProcessedHandler.sendMessage(msg);
                 }
                 catch(NumberFormatException nfe)
                 {
-                    Log.d("PocketMike_CMPSC483W", "FUCK THIS SHIT");
+                    Log.d("PocketMike_CMPSC483W", "The string extracted is not a double");
                 }
-                //readMessage.append(readed);
-                //Log.d("PocketMike_CMPSC483W", readMessage.toString());
+
 
 
             } catch (IOException e) {
+                Log.d("PocketMike_CMPSC483W", "Failed to read PocketMike");
                 break;
             }
         }
@@ -74,14 +79,19 @@ public class ConnectedThread extends Thread {
         try {
             outputStream.write(bytes);
             outputStream.flush();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+            Log.d("PocketMike_CMPSC483W", "Failed to write");
+
+        }
     }
 
     /* Call this from the main activity to shutdown the connection */
     public void cancel() {
         try {
             socket.close();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+            Log.d("PocketMike_CMPSC483W", "Failed to close socket");
+             }
     }
 
 
@@ -100,7 +110,10 @@ public class ConnectedThread extends Thread {
 
     public void setPocketMikeReturnNumber(Double pocketMikeReturnNumber) {
         this.pocketMikeReturnNumber = pocketMikeReturnNumber;
+
     }
+
+
 
 }
 

@@ -2,6 +2,7 @@ package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
 
 /**
  * Created by Anthony on 10/7/2015.
+ *
  */
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -49,7 +50,7 @@ public class BluetoothConnection {
 
         //ConnectThread connectThread = new ConnectThread(this.device);
         connectThread = new ConnectThread(this.device);
-        connectThread.setProcessedCommandHandler(this.commandProcessedHandler);
+        connectThread.setCommandProcessedHandler(this.commandProcessedHandler);
         connectThread.start();
 
     }
@@ -87,6 +88,11 @@ public class BluetoothConnection {
 
     }
 
+    /*public void startBluetooth() {
+        findDevice();
+        setCommandProcessedHandler(new Handler());
+        startReading();
+    }*/
 
     //////////////////////////////////
     /// GETS AND SETS
@@ -97,6 +103,10 @@ public class BluetoothConnection {
 
     public void setAdapter(BluetoothAdapter adapter) {
         this.adapter = adapter;
+    }
+
+    public Handler getCommandProcessedHandler() {
+        return commandProcessedHandler;
     }
 
     public void setCommandProcessedHandler(Handler commandProcessedHandler) {

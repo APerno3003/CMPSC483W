@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import java.util.Observer;
 
 import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
 
@@ -106,6 +109,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {
+                //btConnection.startBluetooth();
                 startBluetooth();
                 Log.d("PocketMike_CMPSC483W", "Start Bluetooth2");
 
@@ -185,8 +189,25 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private void GetPocketButtonOnClick() {
         Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
         btConnection.sendCommand("rd\r");
+        /*btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg)
+        {
+            Log.d("PocketMike_CMPSC483W", "AHSF:LKJHDF");
+            Log.d("PocketMike_CMPSC483W", msg.obj.toString());
+            MeasurementNumbersText.setText(msg.obj.toString());
+        }});*/
     }
-
+    public void startBluetooth() {
+        btConnection.findDevice();
+        btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg)
+        {
+            MeasurementNumbersText.setText(msg.obj.toString());
+        }});
+        btConnection.startReading();
+    }
     private void UpdateCurrentLocationButtonOnClick() {
         findAndDisplayLocation();
     }
@@ -243,14 +264,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    public void startBluetooth() {
-        btConnection.findDevice();
-        btConnection.setCommandProcessedHandler(new Handler());
-        btConnection.startReading();
-    }
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -279,6 +292,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         if (requestCode == REQUEST_ENABLE_BT) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
+                //btConnection.startBluetooth();
                 startBluetooth();
             }
         }
