@@ -208,16 +208,18 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         @Override
         public void handleMessage(Message msg)
         {
-            if(sentMessage.equals("rd")) {
-                MeasurementNumbersText.setText(msg.obj.toString());
-                sentMessage = "un";
-                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                btConnection.sendCommand("un\r");
-            }
-            else if(sentMessage.equals("un"))
+            switch(sentMessage)
             {
+                case "rd":
+                    MeasurementNumbersText.setText(msg.obj.toString());
+                    sentMessage = "un";
+                    btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                    btConnection.sendCommand("un\r");
+                    break;
+                case "un":
+                    unitsText.setText(msg.obj.toString());
+                    break;
 
-                unitsText.setText(msg.obj.toString());
             }
 
         }});
