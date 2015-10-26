@@ -27,6 +27,7 @@ public class BluetoothConnection {
     private BluetoothAdapter adapter;
     private ConnectThread connectThread;
 
+
     // Event handling
     private Handler commandProcessedHandler;
 

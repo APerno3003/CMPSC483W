@@ -59,6 +59,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     public static final String TAG = Mode1Activity.class.getSimpleName();
+    private String sentMessage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +190,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     }
     private void GetPocketButtonOnClick() {
         Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
+        sentMessage = "rd";
+        btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
         btConnection.sendCommand("rd\r");
         /*btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()){
         @Override
@@ -204,7 +208,18 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         @Override
         public void handleMessage(Message msg)
         {
-            MeasurementNumbersText.setText(msg.obj.toString());
+            if(sentMessage.equals("rd")) {
+                MeasurementNumbersText.setText(msg.obj.toString());
+                sentMessage = "un";
+                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                btConnection.sendCommand("un\r");
+            }
+            else if(sentMessage.equals("un"))
+            {
+
+                unitsText.setText(msg.obj.toString());
+            }
+
         }});
         btConnection.startReading();
     }

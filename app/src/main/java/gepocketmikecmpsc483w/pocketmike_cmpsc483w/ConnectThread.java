@@ -2,7 +2,7 @@ package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
 
 /**
  * Created by Anthony on 10/7/2015.
- * 
+ *
  */
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
