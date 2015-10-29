@@ -6,7 +6,10 @@ package gepocketmikecmpsc483w.pocketmike_cmpsc483w;
  */
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.util.Log;
@@ -26,11 +29,16 @@ public class BluetoothConnection {
     private BluetoothDevice device;
     private BluetoothAdapter adapter;
     private ConnectThread connectThread;
-
+    private boolean isBluetoothRunning = false;
 
     // Event handling
     private Handler commandProcessedHandler;
+    public BluetoothConnection()
+    {
+        initAdapter();
+        adapter.startDiscovery();
 
+    }
     public BluetoothConnection(String deviceName) {
         this.deviceName = deviceName;
         initAdapter();
@@ -75,25 +83,21 @@ public class BluetoothConnection {
     }
 
 
+    public void closeBluetoothConnection(){
+        if(isBluetoothRunning) {
+            connectThread.getConnectedThread().cancel();
+        }
+    }
+
+    //allows the user to send commands to the pocketMike
     public void sendCommand(String commandString){
         Log.d("PocketMike_CMPSC483W", "BluetoothConnection sendCommand " + commandString);
 
-        //String commandString = "rd\r";
-        //String commandString = "bl 1\r"; //In order for the pocketMike to receive commands correctly the string must end with \r
-        //String commandString = "un";
-        //String commandString = "un\n";
-        //String commandString = "un\r";
-        //String commandString = "un\r\n";
+        //String commandString = "rd\r"; //In order for the pocketMike to receive commands correctly the string must end with \r
         byte[] commandBytes = commandString.getBytes();
         connectThread.getConnectedThread().write(commandBytes);
 
     }
-
-    /*public void startBluetooth() {
-        findDevice();
-        setCommandProcessedHandler(new Handler());
-        startReading();
-    }*/
 
     //////////////////////////////////
     /// GETS AND SETS
@@ -120,5 +124,24 @@ public class BluetoothConnection {
 
     public void setConnectThread(ConnectThread connectThread) {
         this.connectThread = connectThread;
+    }
+
+    public void setIsBluetoothRunning(boolean isBluetooth)
+    {
+        isBluetoothRunning = isBluetooth;
+    }
+
+    //checks to see if bluetooth is currently running
+    public boolean getIsBluetoothRunning()
+    {
+        if(connectThread == null || connectThread.getConnectedThread() == null) {
+            setIsBluetoothRunning(false);
+        }
+        else
+        {
+            setIsBluetoothRunning(true);
+        }
+
+        return isBluetoothRunning;
     }
 }

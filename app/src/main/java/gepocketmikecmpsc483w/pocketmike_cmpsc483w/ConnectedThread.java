@@ -8,20 +8,15 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
-import java.util.Observable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 
 public class ConnectedThread extends Thread {
     public BluetoothSocket socket;
     public Handler commandProcessedHandler;
     private final InputStream inputStream;
     private final OutputStream outputStream;
-    final int handlerState = 0;
     final int PocketMikeBufferSize = 24;
     private Double pocketMikeReturnNumber;
     private String currentCommand;
@@ -44,18 +39,22 @@ public class ConnectedThread extends Thread {
 
     }
 
+    //allows you to read what comes back from the pocketMike
+    //this function is always running once the bluetooth starts up
     public void run() {
         byte[] buffer = new byte[PocketMikeBufferSize];
         //int begin = 0;
         int bytes;
-        //StringBuilder readMessage = new StringBuilder();
         while (true) {
             try {
                 bytes = inputStream.read(buffer);
                 String readed = new String(buffer, 0, bytes);
-                //Log.d("PocketMike_CMPSC483W", readed);
+                Log.d("PocketMike_CMPSC483W", readed);
                 switch (getCurrentCommand())
                 {
+                    //rd is returned as 2 separte strings one says rd the other says the value it read
+                    //because of this rd has to be handle in that way so the 1st time the code runs it throws away the rd string
+                    //the second time it runs it converts the value that it receives to a double
                     case "rd":
                         try {
                             pocketMikeReturnNumber = Double.parseDouble(readed);
@@ -69,8 +68,10 @@ public class ConnectedThread extends Thread {
                             Log.d("PocketMike_CMPSC483W", "The string extracted is not a double");
                         }
                         break;
+                    //un comes back as a string of 5 chars 'un XX' where XX represent numbers
+                    //because of this you must get the last 2 characters to determine what un actually returned
                     case "un":
-                        String units = readed.substring(4);
+                        String units = readed.substring(3);
                         Integer someNumber = Integer.valueOf(units.trim());
                         if(someNumber == 0) {
                             units = "mm";
@@ -83,6 +84,17 @@ public class ConnectedThread extends Thread {
                             this.commandProcessedHandler.sendMessage(msg);
                         }
                         break;
+                    //bl 0 and bl 1 don't return anything so we can just leave them alone
+                    case "bl 0":
+                    case "bl 1":
+                        Log.d("PocketMike_CMPSC483W", "Light was turn on/off");
+                        break;
+                    case "un 00":
+                    case "un 01":
+                        Log.d("PocketMike_CMPSC483W", "Obtained Units");
+                        break;
+                    default:
+                        Log.d("PocketMike_CMPSC483W", "No Message read");
 
                 }
 

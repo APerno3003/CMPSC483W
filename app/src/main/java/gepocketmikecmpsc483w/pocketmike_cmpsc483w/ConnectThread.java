@@ -12,7 +12,6 @@ import android.util.Log;
 import java.io.IOException;
 
 public class ConnectThread extends Thread {
-
     private BluetoothSocket socket;
     private BluetoothDevice device;
     private Handler handler;
@@ -48,8 +47,6 @@ public class ConnectThread extends Thread {
 
         try {
             this.socket.connect();
-
-            //ConnectedThread connectedThread = new ConnectedThread(this.socket);
             connectedThread = new ConnectedThread(this.socket);
             connectedThread.setCommandProcessedHandler(this.handler);
             connectedThread.start();
@@ -60,6 +57,22 @@ public class ConnectThread extends Thread {
 
     public void setCommandProcessedHandler(Handler handler) {
         this.handler = handler;
+    }
+
+    public BluetoothSocket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(BluetoothSocket socket) {
+        this.socket = socket;
+    }
+
+    public BluetoothDevice getDevice() {
+        return device;
+    }
+
+    public void setDevice(BluetoothDevice device) {
+        this.device = device;
     }
 
 }

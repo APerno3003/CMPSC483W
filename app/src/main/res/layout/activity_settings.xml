@@ -23,7 +23,38 @@
         android:id="@+id/SettingsText"
         android:textSize="40sp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="141dp" />
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/lightText"
+        android:id="@+id/LightTextView"
+        android:layout_below="@+id/SettingsText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="67dp"
+        android:textSize="32sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OnText"
+        android:id="@+id/onButton"
+        android:layout_alignLeft="@+id/SettingsText"
+        android:layout_alignStart="@+id/SettingsText"
+        android:layout_alignTop="@+id/LightTextView"
+        android:layout_alignBottom="@+id/LightTextView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OffText"
+        android:id="@+id/offButton"
+        android:layout_alignTop="@+id/onButton"
+        android:layout_toRightOf="@+id/SettingsText"
+        android:layout_toEndOf="@+id/SettingsText"
+        android:layout_alignBottom="@+id/onButton" />
 
 </RelativeLayout>
