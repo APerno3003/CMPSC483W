@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.content.Context;
 
 import java.text.DecimalFormat;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
     private Button ChangeUnitsButton;
     private Button UpdateCurrentLocationButton;
+    private Button GetVelocityButton;
     private Button GetPocketButton;
     private TextView MeasurementNumbersText;
     private TextView unitsText;
@@ -46,6 +48,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private Location mLastLocation;
     private TextView valueOfLatitude;
     private TextView valueOfLongitude;
+    private TextView setVelocityTextView;
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     //public static final String TAG = Mode1Activity.class.getSimpleName();
@@ -73,11 +76,15 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         GetPocketButton = (Button) findViewById(R.id.GetPocketButton);
         GetPocketButton.setOnClickListener(this);
 
+        GetVelocityButton = (Button) findViewById(R.id.GetVelocityButton);
+        GetVelocityButton.setOnClickListener(this);
+
         //connect Text in layout to text in java file so we can edit them
         MeasurementNumbersText = (TextView) findViewById(R.id.MeasurementNumbersText);
         unitsText = (TextView) findViewById(R.id.unitsText);
         valueOfLatitude = (TextView) findViewById(R.id.valueOfLatitude);
         valueOfLongitude = (TextView) findViewById(R.id.valueOfLongitude);
+        setVelocityTextView = (TextView) findViewById(R.id.setVelocityTextView);
 
         // First we need to check availability of play services
         Log.d("PocketMike_CMPSC483W", "Trying to connect to Google Play Store");
@@ -133,7 +140,14 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
                 btConnection.sendCommand("un 00\r");
 
-            }}*/
+            }}
+            else
+            {
+                Toast.makeText(getApplicationContext(),
+                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                    .show();
+
+            }*/
 
         if ((unitsText.getText().toString()).equals("mm")) {
             unitsText.setText("in");
@@ -174,6 +188,24 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         return Double.valueOf(fourDForm.format(d));
     }
 
+    public void GetVelocityButtonOnClick()
+    {
+        if (btConnection.getIsBluetoothRunning()) {
+            sentMessage = "ve";
+            btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
+            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+            btConnection.sendCommand("ve\r");
+            }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                    .show();
+
+        }
+
+    }
+
     //is the action listener for all the buttons and calls correct function based on case
     @Override
     public void onClick(View v) {
@@ -192,6 +224,9 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.GetPocketButton:
                 GetPocketButtonOnClick();
+                break;
+            case R.id.GetVelocityButton:
+                GetVelocityButtonOnClick();
                 break;
         }
     }
@@ -233,15 +268,21 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                             case "un":
                                 unitsText.setText(msg.obj.toString());
                                 break;
+                            case "ve":
+                                setVelocityTextView.setText(msg.obj.toString());
+                                break;
+                            //case un 00 and un 01 shouldn't return as connectedThread doesn't return the message
                              case "un 00":
-                                 //sentMessage = "rd";
-                                 //btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                 //btConnection.sendCommand("rd\r");
+                                 //un 00 can't call rd because the pocketMike doesn't react fast enough to understand all 3 messages
+                                 /*sentMessage = "rd";
+                                 btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                                 btConnection.sendCommand("rd\r");*/
                                  break;
                             case "un 01":
-                                 //sentMessage = "rd";
-                                 //btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                 //btConnection.sendCommand("rd\r");
+                                //un 01 can't call rd because the pocketMike doesn't react fast enough to understand all 3 messages
+                                 /*sentMessage = "rd";
+                                 btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                                 btConnection.sendCommand("rd\r");*/
                                  break;
                             default:
                                 Log.d("PocketMike_CMPSC483W", "No command sent");
@@ -276,7 +317,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         else
         {
             Toast.makeText(getApplicationContext(),
-                    "Current Location data cannot be found. Latitude and longtiude will be set to the default value of 360.", Toast.LENGTH_LONG)
+                    "Current Location data cannot be found. Latitude and longtiude will be set to the default value of 360.", Toast.LENGTH_SHORT)
                     .show();
             valueOfLatitude.setText(String.valueOf(defaultLatitude));
             valueOfLongitude.setText(String.valueOf(defaultLongitude));

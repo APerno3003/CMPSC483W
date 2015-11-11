@@ -57,4 +57,37 @@
         android:layout_toEndOf="@+id/SettingsText"
         android:layout_alignBottom="@+id/onButton" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/VelocityText"
+        android:id="@+id/VelocityTextView"
+        android:textSize="32sp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="10"
+        android:id="@+id/editVelocityText"
+        android:layout_alignTop="@+id/VelocityTextView"
+        android:layout_toLeftOf="@+id/SettingsBackButton"
+        android:layout_toRightOf="@+id/VelocityTextView"
+        android:layout_toEndOf="@+id/VelocityTextView"
+        android:text="@string/defaultVelocityNumbers" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setText"
+        android:id="@+id/setVelocityButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/editVelocityText"
+        android:layout_alignBottom="@+id/VelocityTextView" />
+
 </RelativeLayout>

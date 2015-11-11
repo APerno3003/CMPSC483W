@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import android.bluetooth.BluetoothAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
@@ -22,6 +23,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     Button SettingsBackButton;
     Button onButton;
     Button offButton;
+    Button setVelocityButton;
+    EditText editVelocityText;
     private BluetoothConnection btConnection;
     private String sentMessage;
     private final static int REQUEST_ENABLE_BT = 1;
@@ -31,6 +34,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
+
+        editVelocityText = (EditText) findViewById(R.id.editVelocityText);
+
         SettingsBackButton = (Button) findViewById(R.id.SettingsBackButton);
         SettingsBackButton.setOnClickListener(this);
 
@@ -39,6 +45,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         offButton = (Button) findViewById(R.id.offButton);
         offButton.setOnClickListener(this);
+
+        setVelocityButton = (Button) findViewById(R.id.setVelocityButton);
+        setVelocityButton.setOnClickListener(this);
+
 
         //Run bluetooth stuff
         btConnection = new BluetoothConnection("PMike-00");
@@ -116,14 +126,33 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
             btConnection.sendCommand(sentMessage);
         }
-            else
-            {
-                Toast.makeText(getApplicationContext(),
-                        "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                        .show();
-
+        else
+           {
+               Toast.makeText(getApplicationContext(),
+                       "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                       .show();
             }
     }
+
+    private void setVelocityButtonOnClick(){
+        if(btConnection.getIsBluetoothRunning())
+        {
+            //velocityValue can only be 8 characters in hex
+            String velocityValue = editVelocityText.getText().toString();
+            sentMessage = "ve "+ velocityValue + "\r";
+            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+            btConnection.sendCommand(sentMessage);
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                    .show();
+
+        }
+    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -137,6 +166,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.offButton:
                 OffButtonOnClick();
                 break;
+            case R.id.setVelocityButton:
+                setVelocityButtonOnClick();
+                break;
 
         }
     }
@@ -149,14 +181,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 public void handleMessage(Message msg) {
                     if (btConnection.getIsBluetoothRunning()) {
                         switch (sentMessage) {
-                           /* case "bl 0":
-                                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                btConnection.sendCommand(sentMessage);
+                            //case bl 0 and bl 1 currently wont get called as I don't send
+                            //a message in conncetedThread
+                            case "bl 0":
+                                Log.d("PocketMike_CMPSC483W", "Turn off light command message returned");
                                 break;
                             case "bl 1":
-                                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                btConnection.sendCommand(sentMessage);
-                                break;*/
+                                Log.d("PocketMike_CMPSC483W", "Turn on light command message returned");
+                                break;
                             default:
                                 Log.d("PocketMike_CMPSC483W", "No command sent from settings menu");
                         }

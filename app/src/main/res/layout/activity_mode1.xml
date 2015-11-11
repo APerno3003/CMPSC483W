@@ -141,4 +141,38 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/VelocityText"
+        android:id="@+id/velocityTextView"
+        android:textSize="24sp"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/UpdateCurrentLocationButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/getText"
+        android:id="@+id/GetVelocityButton"
+        android:textSize="9sp"
+        android:layout_alignTop="@+id/setVelocityTextView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/velocityTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/setVelocityTextView"
+        android:layout_alignTop="@+id/velocityTextView"
+        android:layout_toRightOf="@+id/longitudeText"
+        android:layout_alignRight="@+id/MeasurementText"
+        android:layout_alignEnd="@+id/MeasurementText"
+        android:text="@string/invalidVelocityNumbers" />
+
 </RelativeLayout>
