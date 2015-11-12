@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.bluetooth.BluetoothAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
@@ -25,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     Button offButton;
     Button setVelocityButton;
     EditText editVelocityText;
+    Spinner unitsSpinner;
     private BluetoothConnection btConnection;
     private String sentMessage;
     private final static int REQUEST_ENABLE_BT = 1;
@@ -48,6 +51,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         setVelocityButton = (Button) findViewById(R.id.setVelocityButton);
         setVelocityButton.setOnClickListener(this);
+
+        unitsSpinner = (Spinner) findViewById(R.id.unitsSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.velocityUnits, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitsSpinner.setAdapter(adapter);
 
 
         //Run bluetooth stuff
@@ -138,10 +146,49 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if(btConnection.getIsBluetoothRunning())
         {
             //velocityValue can only be 8 characters in hex
-            String velocityValue = editVelocityText.getText().toString();
-            sentMessage = "ve "+ velocityValue + "\r";
-            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-            btConnection.sendCommand(sentMessage);
+            String velocityText = editVelocityText.getText().toString();
+            Double velocityValue;
+            try {
+            velocityValue = Double.parseDouble(velocityText.trim());
+            if(unitsSpinner.getSelectedItem().toString().equals("m/s"))
+            {
+                if(0 <= velocityValue && velocityValue <= 9999)
+                {
+                    velocityValue = velocityValue*(1000);
+                    velocityText = Integer.toHexString(velocityValue.intValue());
+                    sentMessage = "ve "+ velocityText + "\r";
+                    btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                    btConnection.sendCommand(sentMessage);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+            }
+            else /*if(unitsSpinner.getSelectedItem().toString().equals("in/us"))*/
+            {
+                if(0 <= velocityValue && velocityValue < 1)
+                {
+                    velocityValue = (velocityValue*(1000000))*(25.4/1);
+                    velocityText = Integer.toHexString(velocityValue.intValue());
+                    sentMessage = "ve "+ velocityText + "\r";
+                    btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                    btConnection.sendCommand(sentMessage);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+
+
+        } catch (NumberFormatException e) {
+            Log.d("PocketMike_CMPSC483W", "The value is not a number");
+        }
         }
         else
         {

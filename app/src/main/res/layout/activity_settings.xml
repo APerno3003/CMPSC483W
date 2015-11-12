@@ -71,23 +71,33 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned"
         android:ems="10"
         android:id="@+id/editVelocityText"
         android:layout_alignTop="@+id/VelocityTextView"
-        android:layout_toLeftOf="@+id/SettingsBackButton"
         android:layout_toRightOf="@+id/VelocityTextView"
-        android:layout_toEndOf="@+id/VelocityTextView"
-        android:text="@string/defaultVelocityNumbers" />
+        android:text="@string/defaultVelocityNumbers"
+        android:layout_toLeftOf="@+id/setVelocityButton"
+        android:layout_toStartOf="@+id/setVelocityButton"
+        android:inputType="number|numberDecimal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/setText"
         android:id="@+id/setVelocityButton"
+        android:layout_below="@+id/editVelocityText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/unitsSpinner"
+        android:layout_alignBottom="@+id/VelocityTextView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/editVelocityText"
-        android:layout_alignBottom="@+id/VelocityTextView" />
+        android:layout_toRightOf="@+id/editVelocityText"
+        android:layout_toEndOf="@+id/editVelocityText"
+        android:spinnerMode="dropdown" />
 
 </RelativeLayout>
