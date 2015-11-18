@@ -52,7 +52,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     //public static final String TAG = Mode1Activity.class.getSimpleName();
-    private String sentMessage;
+    //private String sentMessage;
 
 
     @Override
@@ -97,9 +97,9 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         }
 
         //Run bluetooth stuff
-       btConnection = new BluetoothConnection("PMike-00");
+        btConnection = new BluetoothConnection("PMike-00");
         Log.d("PocketMike_CMPSC483W", "Running Bluetooth stuff");
-       // btConnection = new BluetoothConnection();
+        // btConnection = new BluetoothConnection();
         if (btConnection.getAdapter() != null) {
             Log.d("PocketMike_CMPSC483W", "1");
             // Check if bluetooth is enabled, if not ask user to enable it.
@@ -113,7 +113,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 Log.d("PocketMike_CMPSC483W", "Start Bluetooth2");
 
             }
-           // btConnection.findDevice();
+            // btConnection.findDevice();
         }
 
     }
@@ -130,33 +130,40 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     //Allows that user to change the current units the measurement is being taken in
     private void ChangeUnitsButtonOnClick() {
-        /*if (btConnection.getIsBluetoothRunning()) {
-            if ((unitsText.getText().toString()).equals("mm")) {
-                sentMessage = "un 01";
-                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                btConnection.sendCommand("un 01\r");
-            } else {
-                sentMessage = "un 00";
-                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                btConnection.sendCommand("un 00\r");
+        if (btConnection.getIsBluetoothRunning()) {
+            if(btConnection.getIsEchoOff())
+            {
+                if ((unitsText.getText().toString()).equals("mm")) {
 
-            }}
+                    btConnection.setConnectedThreadCommand("un 01");
+                    btConnection.sendCommand("un 01\r");
+                } else {
+                    btConnection.setConnectedThreadCommand("un 00");
+                    btConnection.sendCommand("un 00\r");
+
+                }
+            }
             else
             {
-                Toast.makeText(getApplicationContext(),
+                btConnection.turnOffEcho();
+            }
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
                     "Bluetooth is not currently running", Toast.LENGTH_SHORT)
                     .show();
 
-            }*/
+        }
 
-        if ((unitsText.getText().toString()).equals("mm")) {
+        /*if ((unitsText.getText().toString()).equals("mm")) {
             unitsText.setText("in");
             MeasurementNumbersText.setText("0.000");
         } else {
 
             unitsText.setText("mm");
             MeasurementNumbersText.setText("000");
-        }
+        }*/
 
     }
 
@@ -191,11 +198,16 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     public void GetVelocityButtonOnClick()
     {
         if (btConnection.getIsBluetoothRunning()) {
-            sentMessage = "ve";
-            btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
-            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-            btConnection.sendCommand("ve\r");
+            if(btConnection.getIsEchoOff()) {
+                btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
+                btConnection.setConnectedThreadCommand("ve");
+                btConnection.sendCommand("ve\r");
             }
+            else
+            {
+                btConnection.turnOffEcho();
+            }
+        }
         else
         {
             Toast.makeText(getApplicationContext(),
@@ -236,9 +248,14 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
         if(btConnection.getIsBluetoothRunning())
         {
-            sentMessage = "rd";
-            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-            btConnection.sendCommand("rd\r");
+            if(btConnection.getIsEchoOff()) {
+                btConnection.setConnectedThreadCommand("rd");
+                btConnection.sendCommand("rd\r");
+            }
+            else
+            {
+                btConnection.turnOffEcho();
+            }
         }
         else
         {
@@ -252,52 +269,52 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     //starts the bluetooth and sets up handler for when you want to send and recevice messages
     public void startBluetooth() {
 
-            btConnection.findDevice();
-            btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (btConnection.getIsBluetoothRunning()) {
+        btConnection.findDevice();
+        btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if (btConnection.getIsBluetoothRunning()) {
 
-                        switch (sentMessage) {
-                            case "rd":
-                                MeasurementNumbersText.setText(msg.obj.toString());
-                                sentMessage = "un";
-                                btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                btConnection.sendCommand("un\r");
-                                break;
-                            case "un":
-                                unitsText.setText(msg.obj.toString());
-                                break;
-                            case "ve":
-                                setVelocityTextView.setText(msg.obj.toString());
-                                break;
-                            //case un 00 and un 01 shouldn't return as connectedThread doesn't return the message
-                             case "un 00":
-                                 //un 00 can't call rd because the pocketMike doesn't react fast enough to understand all 3 messages
-                                 /*sentMessage = "rd";
-                                 btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                 btConnection.sendCommand("rd\r");*/
-                                 break;
-                            case "un 01":
-                                //un 01 can't call rd because the pocketMike doesn't react fast enough to understand all 3 messages
-                                 /*sentMessage = "rd";
-                                 btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-                                 btConnection.sendCommand("rd\r");*/
-                                 break;
-                            default:
-                                Log.d("PocketMike_CMPSC483W", "No command sent");
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                                .show();
-
+                    switch (btConnection.getConnectedThreadCommand()) {
+                        case "rd":
+                            MeasurementNumbersText.setText(msg.obj.toString());
+                            btConnection.setConnectedThreadCommand("un");
+                            btConnection.sendCommand("un\r");
+                            break;
+                        case "un":
+                            unitsText.setText(msg.obj.toString());
+                            break;
+                        case "ve":
+                            setVelocityTextView.setText(msg.obj.toString());
+                            break;
+                        case "un 00":
+                            btConnection.setConnectedThreadCommand("rd");
+                            btConnection.sendCommand("rd\r");
+                            break;
+                        case "un 01":
+                            btConnection.setConnectedThreadCommand("rd");
+                            btConnection.sendCommand("rd\r");
+                            break;
+                        case "e0":
+                            btConnection.setIsEchoOff(true);
+                            Log.d("PocketMike_CMPSC483W", "Echo turned off");
+                            Toast.makeText(getApplicationContext(),
+                                    "Please press the button again", Toast.LENGTH_SHORT)
+                                    .show();
+                            break;
+                        default:
+                            Log.d("PocketMike_CMPSC483W", "No command sent");
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                            .show();
 
                 }
-            });
-            btConnection.startReading();
 
+            }
+        });
+        btConnection.startReading();
     }
     private void UpdateCurrentLocationButtonOnClick() {
         findAndDisplayLocation();

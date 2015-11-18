@@ -30,6 +30,7 @@ public class BluetoothConnection {
     private BluetoothAdapter adapter;
     private ConnectThread connectThread;
     private boolean isBluetoothRunning = false;
+    private boolean isEchoOff = false;
 
     // Event handling
     private Handler commandProcessedHandler;
@@ -99,6 +100,16 @@ public class BluetoothConnection {
 
     }
 
+    public void turnOffEcho(){
+        if(isBluetoothRunning && !isEchoOff) {
+            setConnectedThreadCommand("e0");
+            String sentMessage = "e0";
+            getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+            sendCommand("e0\r");
+        }
+
+    }
+
     //////////////////////////////////
     /// GETS AND SETS
     /////////////////////////////////
@@ -144,4 +155,24 @@ public class BluetoothConnection {
 
         return isBluetoothRunning;
     }
+
+
+    public boolean getIsEchoOff() {
+        return isEchoOff;
+    }
+
+    public void setIsEchoOff(boolean isEchoOff) {
+        this.isEchoOff = isEchoOff;
+    }
+
+    public String getConnectedThreadCommand(){
+        return this.getConnectThread().getConnectedThread().getCurrentCommand();
+    }
+
+    public void setConnectedThreadCommand(String currentCommand){
+        this.getConnectThread().getConnectedThread().setCurrentCommand(currentCommand);
+    }
+
+
 }
+

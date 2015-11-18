@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     EditText editVelocityText;
     Spinner unitsSpinner;
     private BluetoothConnection btConnection;
-    private String sentMessage;
+    //private String sentMessage;
     private final static int REQUEST_ENABLE_BT = 1;
 
     @Override
@@ -114,9 +114,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     //sends the command to turn on the light on the pocketMike
     private void OnButtonOnClick() {
         if (btConnection.getIsBluetoothRunning()) {
-            sentMessage = "bl 1\r";
-            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-            btConnection.sendCommand(sentMessage);
+            if (btConnection.getIsEchoOff()) {
+                String sentMessage = "bl 1\r";
+                btConnection.setConnectedThreadCommand("bl 1");
+                btConnection.sendCommand(sentMessage);
+            } else {
+                btConnection.turnOffEcho();
+
+            }
         }
         else
         {
@@ -130,9 +135,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     //sends the command to turn off the light on the pocketMike
     private void OffButtonOnClick() {
         if (btConnection.getIsBluetoothRunning()) {
-            sentMessage = "bl 0\r";
-            btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
-            btConnection.sendCommand(sentMessage);
+            if(btConnection.getIsEchoOff())
+            {
+                String sentMessage = "bl 0\r";
+                btConnection.setConnectedThreadCommand("bl 0");
+                btConnection.sendCommand(sentMessage);
+            }
+            else
+            {
+                btConnection.turnOffEcho();
+            }
         }
         else
            {
@@ -156,8 +168,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 {
                     velocityValue = velocityValue*(1000);
                     velocityText = Integer.toHexString(velocityValue.intValue());
-                    sentMessage = "ve "+ velocityText + "\r";
-                    btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                    String sentMessage = "ve "+ velocityText + "\r";
+                    btConnection.setConnectedThreadCommand(sentMessage);
                     btConnection.sendCommand(sentMessage);
                 }
                 else
@@ -174,8 +186,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 {
                     velocityValue = (velocityValue*(1000000))*(25.4/1);
                     velocityText = Integer.toHexString(velocityValue.intValue());
-                    sentMessage = "ve "+ velocityText + "\r";
-                    btConnection.getConnectThread().getConnectedThread().setCurrentCommand(sentMessage);
+                    String sentMessage = "ve "+ velocityText + "\r";
+                    btConnection.setConnectedThreadCommand(sentMessage);
                     btConnection.sendCommand(sentMessage);
                 }
                 else {
@@ -227,7 +239,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void handleMessage(Message msg) {
                     if (btConnection.getIsBluetoothRunning()) {
-                        switch (sentMessage) {
+                        switch (btConnection.getConnectedThreadCommand()) {
                             //case bl 0 and bl 1 currently wont get called as I don't send
                             //a message in conncetedThread
                             case "bl 0":
@@ -235,6 +247,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 break;
                             case "bl 1":
                                 Log.d("PocketMike_CMPSC483W", "Turn on light command message returned");
+                                break;
+                            case "e0":
+                                btConnection.setIsEchoOff(true);
+                                Log.d("PocketMike_CMPSC483W", "Echo turned off");
+                                Toast.makeText(getApplicationContext(),
+                                        "Please press the button again", Toast.LENGTH_SHORT)
+                                        .show();
                                 break;
                             default:
                                 Log.d("PocketMike_CMPSC483W", "No command sent from settings menu");
@@ -248,7 +267,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
             });
             btConnection.startReading();
-
     }
 
     @Override

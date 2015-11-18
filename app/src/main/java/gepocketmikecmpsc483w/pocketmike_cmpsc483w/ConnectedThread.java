@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 
 public class ConnectedThread extends Thread {
     public BluetoothSocket socket;
@@ -48,6 +49,7 @@ public class ConnectedThread extends Thread {
     //this function is always running once the bluetooth starts up
     public void run() {
         byte[] buffer = new byte[PocketMikeBufferSize];
+        Message msg;
         //int begin = 0;
         int bytes;
         while (true) try {
@@ -55,37 +57,30 @@ public class ConnectedThread extends Thread {
             String readed = new String(buffer, 0, bytes);
             Log.d("PocketMike_CMPSC483W", readed);
             switch (getCurrentCommand()) {
-                //rd is returned as 2 separte strings one says rd the other says the value it read
-                //because of this rd has to be handle in that way so the 1st time the code runs it throws away the rd string
-                //the second time it runs it converts the value that it receives to a double
                 case "rd":
                     try {
-                        pocketMikeReturnNumber = Double.parseDouble(readed);
-                        //Log.d("PocketMike_CMPSC483W", pocketMikeReturnNumber.toString());
-                        Message msg = this.commandProcessedHandler.obtainMessage(1, pocketMikeReturnNumber);
-                        //Log.d("PocketMike_CMPSC483W", msg.toString());
+                        pocketMikeReturnNumber = Double.parseDouble(readed.trim());
+                        msg = this.commandProcessedHandler.obtainMessage(1, pocketMikeReturnNumber);
                         this.commandProcessedHandler.sendMessage(msg);
                     } catch (NumberFormatException nfe) {
                         Log.d("PocketMike_CMPSC483W", "The string extracted is not a double");
                     }
                     break;
-                //un comes back as a string of 5 chars 'un XX' where XX represent numbers
-                //because of this you must get the last 2 characters to determine what un actually returned
                 case "un":
                     try {
-                        String units = readed.substring(2);
-                        Integer unitsNumber = Integer.valueOf(units.trim());
+                        String units;
+                        Integer unitsNumber = Integer.valueOf(readed.trim());
                         if (unitsNumber == 0) {
                             units = "mm";
-                            Message msg = this.commandProcessedHandler.obtainMessage(1, units);
+                            msg = this.commandProcessedHandler.obtainMessage(1, units);
                             this.commandProcessedHandler.sendMessage(msg);
 
                         } else if (unitsNumber == 2) {
                             units = "inch";
-                            Message msg = this.commandProcessedHandler.obtainMessage(1, units);
+                            msg = this.commandProcessedHandler.obtainMessage(1, units);
                             this.commandProcessedHandler.sendMessage(msg);
                         }
-                    } catch (StringIndexOutOfBoundsException e) {
+                    } catch (NumberFormatException nfe) {
                         Log.d("PocketMike_CMPSC483W", "The units couldn't be extracted try again");
                     }
                     break;
@@ -96,21 +91,22 @@ public class ConnectedThread extends Thread {
                         Integer velocity;
                         //convert hex value to interger
                         velocity = Integer.parseInt(hexVelocity.trim(), 16);
-                        Log.d("PocketMike_CMPSC483W",velocity.toString());
+                        //Log.d("PocketMike_CMPSC483W",velocity.toString());
+                        //convert the velocity value to either m/s or in/us based on current units
                         if(getCurrentDisplayUnits().equals("mm"))
                         {
                             velocity = velocity/1000;
-                            //Log.d("PocketMike_CMPSC483W", velocity.toString());
                             convertedVelocity = velocity.toString().trim() + " m/s";
                         }
                         else /*if(getCurrentDisplayUnits() == "inch")*/
                         {
                             Double tempVelocity = velocity.doubleValue();
-                            tempVelocity = tempVelocity*(1/25.4)*(1/1000000.0);
-                            convertedVelocity = tempVelocity.toString().trim().substring(0,6) + " in/us";
+                            tempVelocity = tempVelocity*(1.0/25.4)*(1.0/1000000.0);
+                            tempVelocity = roundToFourDecimals(tempVelocity);
+                            convertedVelocity = tempVelocity.toString().trim() + " in/us";
                         }
 
-                        Message msg = this.commandProcessedHandler.obtainMessage(1, convertedVelocity);
+                        msg = this.commandProcessedHandler.obtainMessage(1, convertedVelocity);
                         this.commandProcessedHandler.sendMessage(msg);
                     } catch (NumberFormatException e) {
                         Log.d("PocketMike_CMPSC483W", "The value is not a number");
@@ -121,10 +117,20 @@ public class ConnectedThread extends Thread {
                 case "bl 1":
                     Log.d("PocketMike_CMPSC483W", "Light was turn on/off");
                     break;
-                //un 00 and un 01 don't need to retunr anything so we can just leave them alone
                 case "un 00":
+                    msg = this.commandProcessedHandler.obtainMessage(1, "unit 00");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "connectedThread units were changed 00");
+                    break;
                 case "un 01":
-                    Log.d("PocketMike_CMPSC483W", "connectedThread units were changed");
+                    msg = this.commandProcessedHandler.obtainMessage(1, "unit 01");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "connectedThread units were changed 01");
+                    break;
+                case "e0":
+                    msg = this.commandProcessedHandler.obtainMessage(1, "Echo");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "Echo turned off 1");
                     break;
                 default:
                     Log.d("PocketMike_CMPSC483W", "No Message read");
@@ -156,6 +162,11 @@ public class ConnectedThread extends Thread {
     }
 
 
+    //round the precision to one interger and 4 decimal points
+    Double roundToFourDecimals(Double d) {
+        DecimalFormat fourDForm = new DecimalFormat("#.####");
+        return Double.valueOf(fourDForm.format(d));
+    }
 
     //////////////////////////////////
     /// GETS AND SETS

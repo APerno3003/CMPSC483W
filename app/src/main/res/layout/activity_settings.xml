@@ -75,7 +75,6 @@
         android:id="@+id/editVelocityText"
         android:layout_alignTop="@+id/VelocityTextView"
         android:layout_toRightOf="@+id/VelocityTextView"
-        android:text="@string/defaultVelocityNumbers"
         android:layout_toLeftOf="@+id/setVelocityButton"
         android:layout_toStartOf="@+id/setVelocityButton"
         android:inputType="number|numberDecimal" />
