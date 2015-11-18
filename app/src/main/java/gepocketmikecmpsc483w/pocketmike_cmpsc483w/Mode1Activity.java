@@ -130,7 +130,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     //Allows that user to change the current units the measurement is being taken in
     private void ChangeUnitsButtonOnClick() {
-        if (btConnection.getIsBluetoothRunning()) {
+        /*if (btConnection.getIsBluetoothRunning()) {
             if(btConnection.getIsEchoOff())
             {
                 if ((unitsText.getText().toString()).equals("mm")) {
@@ -154,16 +154,16 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                     "Bluetooth is not currently running", Toast.LENGTH_SHORT)
                     .show();
 
-        }
+        }*/
 
-        /*if ((unitsText.getText().toString()).equals("mm")) {
+        if ((unitsText.getText().toString()).equals("mm")) {
             unitsText.setText("in");
             MeasurementNumbersText.setText("0.000");
         } else {
 
             unitsText.setText("mm");
             MeasurementNumbersText.setText("000");
-        }*/
+        }
 
     }
 
@@ -249,8 +249,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         if(btConnection.getIsBluetoothRunning())
         {
             if(btConnection.getIsEchoOff()) {
-                btConnection.setConnectedThreadCommand("rd");
-                btConnection.sendCommand("rd\r");
+                btConnection.setConnectedThreadCommand("md 0");
+                btConnection.sendCommand("md 0\r");
             }
             else
             {
@@ -276,6 +276,28 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 if (btConnection.getIsBluetoothRunning()) {
 
                     switch (btConnection.getConnectedThreadCommand()) {
+                        case "md 0":
+                            /*try {
+                                wait(10);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }*/
+                            btConnection.setConnectedThreadCommand("rf");
+                            btConnection.sendCommand("rf\r");
+                            break;
+                        case "rf":
+                            if(msg.obj.toString().equals("6"))
+                            {
+                                btConnection.setConnectedThreadCommand("rd");
+                                btConnection.sendCommand("rd\r");
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(),
+                                        "Please adjust the PocketMike coupling was invalid", Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                            break;
                         case "rd":
                             MeasurementNumbersText.setText(msg.obj.toString());
                             btConnection.setConnectedThreadCommand("un");
@@ -297,7 +319,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                             break;
                         case "e0":
                             btConnection.setIsEchoOff(true);
-                            Log.d("PocketMike_CMPSC483W", "Echo turned off");
+                            Log.d("PocketMike_CMPSC483W", "Echo turned off 2");
                             Toast.makeText(getApplicationContext(),
                                     "Please press the button again", Toast.LENGTH_SHORT)
                                     .show();

@@ -132,6 +132,21 @@ public class ConnectedThread extends Thread {
                     this.commandProcessedHandler.sendMessage(msg);
                     Log.d("PocketMike_CMPSC483W", "Echo turned off 1");
                     break;
+                case "md 0":
+                    msg = this.commandProcessedHandler.obtainMessage(1, "md");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "Mode changed to 0");
+                    break;
+                case "rf":
+                    try{
+                        Integer couplingStatus = Integer.valueOf(readed.trim());
+                        msg = this.commandProcessedHandler.obtainMessage(1, couplingStatus.toString().trim());
+                        this.commandProcessedHandler.sendMessage(msg);
+                    } catch (NumberFormatException nfe) {
+                        Log.d("PocketMike_CMPSC483W", "The string extracted is not a double");
+                    }
+                    Log.d("PocketMike_CMPSC483W", "Coupling status read");
+                    break;
                 default:
                     Log.d("PocketMike_CMPSC483W", "No Message read");
 
