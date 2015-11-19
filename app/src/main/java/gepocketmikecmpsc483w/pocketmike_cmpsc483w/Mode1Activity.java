@@ -27,7 +27,6 @@ import gepocketmikecmpsc483w.pocketmike_cmpsc483w.BluetoothConnection;
 
 public class Mode1Activity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    // Bluetooth
     private final static int defaultLatitude = 360;
     private final static int defaultLongitude = 360;
     private final static int REQUEST_ENABLE_BT = 1;
@@ -51,9 +50,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private TextView setVelocityTextView;
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-    //public static final String TAG = Mode1Activity.class.getSimpleName();
-    //private String sentMessage;
-
+    private boolean isThreadFinished = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,22 +127,32 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     //Allows that user to change the current units the measurement is being taken in
     private void ChangeUnitsButtonOnClick() {
-        /*if (btConnection.getIsBluetoothRunning()) {
+        if (btConnection.getIsBluetoothRunning()) {
             if(btConnection.getIsEchoOff())
             {
-                if ((unitsText.getText().toString()).equals("mm")) {
+                if(isThreadFinished) {
+                    isThreadFinished = false;
+                    if ((unitsText.getText().toString()).equals("mm")) {
 
-                    btConnection.setConnectedThreadCommand("un 01");
-                    btConnection.sendCommand("un 01\r");
-                } else {
-                    btConnection.setConnectedThreadCommand("un 00");
-                    btConnection.sendCommand("un 00\r");
+                        btConnection.setConnectedThreadCommand("un 01");
+                        btConnection.sendCommand("un 01\r");
+                    } else {
+                        btConnection.setConnectedThreadCommand("un 00");
+                        btConnection.sendCommand("un 00\r");
 
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
             else
             {
                 btConnection.turnOffEcho();
+
             }
         }
         else
@@ -154,16 +161,16 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                     "Bluetooth is not currently running", Toast.LENGTH_SHORT)
                     .show();
 
-        }*/
+        }
 
-        if ((unitsText.getText().toString()).equals("mm")) {
+        /*if ((unitsText.getText().toString()).equals("mm")) {
             unitsText.setText("in");
             MeasurementNumbersText.setText("0.000");
         } else {
 
             unitsText.setText("mm");
             MeasurementNumbersText.setText("000");
-        }
+        }*/
 
     }
 
@@ -199,13 +206,25 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     {
         if (btConnection.getIsBluetoothRunning()) {
             if(btConnection.getIsEchoOff()) {
-                btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
-                btConnection.setConnectedThreadCommand("ve");
-                btConnection.sendCommand("ve\r");
+                if (isThreadFinished)
+                {
+                    isThreadFinished = false;
+                    btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
+                    btConnection.setConnectedThreadCommand("ve");
+                    btConnection.sendCommand("ve\r");
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
+
+                }
             }
             else
             {
                 btConnection.turnOffEcho();
+
             }
         }
         else
@@ -249,12 +268,24 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         if(btConnection.getIsBluetoothRunning())
         {
             if(btConnection.getIsEchoOff()) {
-                btConnection.setConnectedThreadCommand("md 0");
-                btConnection.sendCommand("md 0\r");
+                if(isThreadFinished) {
+                    isThreadFinished = false;
+                    btConnection.setConnectedThreadCommand("md 0");
+                    btConnection.sendCommand("md 0\r");
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
+
+                }
             }
             else
             {
                 btConnection.turnOffEcho();
+
+
             }
         }
         else
@@ -277,11 +308,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
                     switch (btConnection.getConnectedThreadCommand()) {
                         case "md 0":
-                            /*try {
-                                wait(10);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }*/
                             btConnection.setConnectedThreadCommand("rf");
                             btConnection.sendCommand("rf\r");
                             break;
@@ -293,8 +319,9 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                             }
                             else
                             {
+                                isThreadFinished = true;
                                 Toast.makeText(getApplicationContext(),
-                                        "Please adjust the PocketMike coupling was invalid", Toast.LENGTH_SHORT)
+                                        "Please try again invalid coupling status", Toast.LENGTH_SHORT)
                                         .show();
                             }
                             break;
@@ -305,9 +332,13 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                             break;
                         case "un":
                             unitsText.setText(msg.obj.toString());
+                            btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
+                            btConnection.setConnectedThreadCommand("ve");
+                            btConnection.sendCommand("ve\r");
                             break;
                         case "ve":
                             setVelocityTextView.setText(msg.obj.toString());
+                            isThreadFinished = true;
                             break;
                         case "un 00":
                             btConnection.setConnectedThreadCommand("rd");

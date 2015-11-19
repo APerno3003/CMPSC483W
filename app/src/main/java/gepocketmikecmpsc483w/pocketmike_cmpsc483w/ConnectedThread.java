@@ -142,8 +142,9 @@ public class ConnectedThread extends Thread {
                         Integer couplingStatus = Integer.valueOf(readed.trim());
                         msg = this.commandProcessedHandler.obtainMessage(1, couplingStatus.toString().trim());
                         this.commandProcessedHandler.sendMessage(msg);
+
                     } catch (NumberFormatException nfe) {
-                        Log.d("PocketMike_CMPSC483W", "The string extracted is not a double");
+                        Log.d("PocketMike_CMPSC483W", "The string extracted is not a vaild number");
                     }
                     Log.d("PocketMike_CMPSC483W", "Coupling status read");
                     break;

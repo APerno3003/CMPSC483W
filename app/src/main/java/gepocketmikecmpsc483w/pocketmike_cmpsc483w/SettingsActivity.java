@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     EditText editVelocityText;
     Spinner unitsSpinner;
     private BluetoothConnection btConnection;
-    //private String sentMessage;
+    private boolean isThreadFinished = true;
     private final static int REQUEST_ENABLE_BT = 1;
 
     @Override
@@ -144,6 +144,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             else
             {
                 btConnection.turnOffEcho();
+
             }
         }
         else
