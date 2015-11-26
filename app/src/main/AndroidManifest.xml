@@ -13,7 +13,9 @@
         android:theme="@style/AppTheme" > <!-- -->
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +24,9 @@
         </activity>
         <activity
             android:name=".Mode1Activity"
-            android:label="@string/title_activity_mode1" >
+            android:label="@string/title_activity_mode1"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="Mode1Activity" />
 
@@ -31,7 +35,9 @@
         </activity>
         <activity
             android:name=".Mode2Activity"
-            android:label="@string/title_activity_mode2" >
+            android:label="@string/title_activity_mode2"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="Mode2Activity" />
 
@@ -40,7 +46,9 @@
         </activity>
         <activity
             android:name=".Mode3Activity"
-            android:label="@string/title_activity_mode3" >
+            android:label="@string/title_activity_mode3"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="Mode3Activity" />
 
@@ -49,7 +57,9 @@
         </activity>
         <activity
             android:name=".CopyrightActivity"
-            android:label="@string/title_activity_copyright" >
+            android:label="@string/title_activity_copyright"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="CopyrightActivity" />
 
@@ -58,7 +68,9 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="SettingsActivity" />
 

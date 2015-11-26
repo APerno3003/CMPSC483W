@@ -202,6 +202,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         return Double.valueOf(fourDForm.format(d));
     }
 
+    //get the current units of the pocketMike then gets the velocity in those units
     public void GetVelocityButtonOnClick()
     {
         if (btConnection.getIsBluetoothRunning()) {
@@ -209,9 +210,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                 if (isThreadFinished)
                 {
                     isThreadFinished = false;
-                    btConnection.getConnectThread().getConnectedThread().setCurrentDisplayUnits((unitsText.getText().toString()));
-                    btConnection.setConnectedThreadCommand("ve");
-                    btConnection.sendCommand("ve\r");
+                    btConnection.setConnectedThreadCommand("un");
+                    btConnection.sendCommand("un\r");
                 }
                 else
                 {

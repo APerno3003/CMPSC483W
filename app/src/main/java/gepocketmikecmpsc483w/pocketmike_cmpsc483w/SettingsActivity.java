@@ -115,9 +115,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private void OnButtonOnClick() {
         if (btConnection.getIsBluetoothRunning()) {
             if (btConnection.getIsEchoOff()) {
-                String sentMessage = "bl 1\r";
-                btConnection.setConnectedThreadCommand("bl 1");
-                btConnection.sendCommand(sentMessage);
+                if(isThreadFinished) {
+                    isThreadFinished = false;
+                    String sentMessage = "bl 1\r";
+                    btConnection.setConnectedThreadCommand("bl 1");
+                    btConnection.sendCommand(sentMessage);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
+                }
             } else {
                 btConnection.turnOffEcho();
 
@@ -137,9 +146,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (btConnection.getIsBluetoothRunning()) {
             if(btConnection.getIsEchoOff())
             {
-                String sentMessage = "bl 0\r";
-                btConnection.setConnectedThreadCommand("bl 0");
-                btConnection.sendCommand(sentMessage);
+                if(isThreadFinished) {
+                    isThreadFinished = false;
+                    String sentMessage = "bl 0\r";
+                    btConnection.setConnectedThreadCommand("bl 0");
+                    btConnection.sendCommand(sentMessage);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
             else
             {
@@ -158,50 +176,50 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private void setVelocityButtonOnClick(){
         if(btConnection.getIsBluetoothRunning())
         {
-            //velocityValue can only be 8 characters in hex
-            String velocityText = editVelocityText.getText().toString();
-            Double velocityValue;
-            try {
-            velocityValue = Double.parseDouble(velocityText.trim());
-            if(unitsSpinner.getSelectedItem().toString().equals("m/s"))
-            {
-                if(0 <= velocityValue && velocityValue <= 9999)
-                {
-                    velocityValue = velocityValue*(1000);
-                    velocityText = Integer.toHexString(velocityValue.intValue());
-                    String sentMessage = "ve "+ velocityText + "\r";
-                    btConnection.setConnectedThreadCommand(sentMessage);
-                    btConnection.sendCommand(sentMessage);
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
-                            .show();
-                }
+            if(isThreadFinished) {
+                isThreadFinished = false;
 
+                //velocityValue can only be 8 characters in hex
+                String velocityText = editVelocityText.getText().toString();
+                Double velocityValue;
+                try {
+                    velocityValue = Double.parseDouble(velocityText.trim());
+                    if (unitsSpinner.getSelectedItem().toString().equals("m/s")) {
+                        if (0 <= velocityValue && velocityValue <= 9999) {
+                            velocityValue = velocityValue * (1000);
+                            velocityText = Integer.toHexString(velocityValue.intValue());
+                            String sentMessage = "ve " + velocityText + "\r";
+                            btConnection.setConnectedThreadCommand("velocityChanged");
+                            btConnection.sendCommand(sentMessage);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    } else /*if(unitsSpinner.getSelectedItem().toString().equals("in/us"))*/ {
+                        if (0 <= velocityValue && velocityValue < 1) {
+                            velocityValue = (velocityValue * (1000000)) * (25.4 / 1);
+                            velocityText = Integer.toHexString(velocityValue.intValue());
+                            String sentMessage = "ve " + velocityText + "\r";
+                            btConnection.setConnectedThreadCommand("velocityChanged");
+                            btConnection.sendCommand(sentMessage);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+
+                } catch (NumberFormatException e) {
+                    Log.d("PocketMike_CMPSC483W", "The value is not a number");
+                }
             }
-            else /*if(unitsSpinner.getSelectedItem().toString().equals("in/us"))*/
+            else
             {
-                if(0 <= velocityValue && velocityValue < 1)
-                {
-                    velocityValue = (velocityValue*(1000000))*(25.4/1);
-                    velocityText = Integer.toHexString(velocityValue.intValue());
-                    String sentMessage = "ve "+ velocityText + "\r";
-                    btConnection.setConnectedThreadCommand(sentMessage);
-                    btConnection.sendCommand(sentMessage);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please Enter a valid velocity value.", Toast.LENGTH_SHORT)
-                            .show();
-                }
+                Toast.makeText(getApplicationContext(),
+                        "Please wait until process has finished", Toast.LENGTH_SHORT)
+                        .show();
             }
-
-
-        } catch (NumberFormatException e) {
-            Log.d("PocketMike_CMPSC483W", "The value is not a number");
-        }
         }
         else
         {
@@ -241,13 +259,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 public void handleMessage(Message msg) {
                     if (btConnection.getIsBluetoothRunning()) {
                         switch (btConnection.getConnectedThreadCommand()) {
-                            //case bl 0 and bl 1 currently wont get called as I don't send
-                            //a message in conncetedThread
                             case "bl 0":
+                                isThreadFinished = true;
                                 Log.d("PocketMike_CMPSC483W", "Turn off light command message returned");
                                 break;
                             case "bl 1":
+                                isThreadFinished = true;
                                 Log.d("PocketMike_CMPSC483W", "Turn on light command message returned");
+                                break;
+                            case "velocityChanged":
+                                isThreadFinished = true;
+                                Log.d("PocketMike_CMPSC483W", "The velocity has been changed");
                                 break;
                             case "e0":
                                 btConnection.setIsEchoOff(true);

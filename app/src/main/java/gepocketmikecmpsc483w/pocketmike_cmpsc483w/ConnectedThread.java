@@ -114,8 +114,14 @@ public class ConnectedThread extends Thread {
                     break;
                 //bl 0 and bl 1 don't return anything so we can just leave them alone
                 case "bl 0":
+                    msg = this.commandProcessedHandler.obtainMessage(1, "Light was turned off");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "Light was turned off");
+                    break;
                 case "bl 1":
-                    Log.d("PocketMike_CMPSC483W", "Light was turn on/off");
+                    msg = this.commandProcessedHandler.obtainMessage(1, "Light was turned on");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "Light was turned on");
                     break;
                 case "un 00":
                     msg = this.commandProcessedHandler.obtainMessage(1, "unit 00");
@@ -136,6 +142,11 @@ public class ConnectedThread extends Thread {
                     msg = this.commandProcessedHandler.obtainMessage(1, "md");
                     this.commandProcessedHandler.sendMessage(msg);
                     Log.d("PocketMike_CMPSC483W", "Mode changed to 0");
+                    break;
+                case "velocityChanged":
+                    msg = this.commandProcessedHandler.obtainMessage(1, "ve changed");
+                    this.commandProcessedHandler.sendMessage(msg);
+                    Log.d("PocketMike_CMPSC483W", "velcoityChanged");
                     break;
                 case "rf":
                     try{
