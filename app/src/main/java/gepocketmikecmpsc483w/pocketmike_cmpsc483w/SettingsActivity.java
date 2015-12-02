@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private BluetoothConnection btConnection;
     private boolean isThreadFinished = true;
     private final static int REQUEST_ENABLE_BT = 1;
+    private String pocketMikeName = "PMike-00";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
         //Run bluetooth stuff
-        btConnection = new BluetoothConnection("PMike-00");
+        btConnection = new BluetoothConnection(pocketMikeName);
         Log.d("PocketMike_CMPSC483W", "Running Bluetooth stuff");
         // btConnection = new BluetoothConnection();
         if (btConnection.getAdapter() != null) {

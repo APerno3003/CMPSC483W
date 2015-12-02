@@ -34,6 +34,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private BluetoothConnection btConnection;
     private BluetoothAdapter btAdapter;
 
+    private String pocketMikeName = "PMike-00";
+    
     private Button Mode1BackButton;
     private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
     private Button ChangeUnitsButton;
@@ -94,7 +96,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         }
 
         //Run bluetooth stuff
-        btConnection = new BluetoothConnection("PMike-00");
+        btConnection = new BluetoothConnection(pocketMikeName);
         Log.d("PocketMike_CMPSC483W", "Running Bluetooth stuff");
         // btConnection = new BluetoothConnection();
         if (btConnection.getAdapter() != null) {
