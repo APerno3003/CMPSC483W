@@ -52,6 +52,7 @@ public class ConnectedThread extends Thread {
         Message msg;
         //int begin = 0;
         int bytes;
+        String rf = "";
         while (true) try {
             bytes = inputStream.read(buffer);
             String readed = new String(buffer, 0, bytes);
@@ -150,10 +151,13 @@ public class ConnectedThread extends Thread {
                     break;
                 case "rf":
                     try{
-                        Integer couplingStatus = Integer.valueOf(readed.trim());
-                        msg = this.commandProcessedHandler.obtainMessage(1, couplingStatus.toString().trim());
-                        this.commandProcessedHandler.sendMessage(msg);
-
+                        rf +=readed;
+                        if(rf.trim().length() == 2) {
+                            Integer couplingStatus = Integer.valueOf(readed.trim());
+                            msg = this.commandProcessedHandler.obtainMessage(1, couplingStatus.toString().trim());
+                            this.commandProcessedHandler.sendMessage(msg);
+                            rf = "";
+                        }
                     } catch (NumberFormatException nfe) {
                         Log.d("PocketMike_CMPSC483W", "The string extracted is not a vaild number");
                     }

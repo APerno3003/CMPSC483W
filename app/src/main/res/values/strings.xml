@@ -24,6 +24,7 @@
     <string name="WorkInProgressText">Work in Progress</string>
     <string name="defaultUnits">mm</string>
     <string name="GetDataText">Get Data</string>
+    <string name="GetThicknessText">Get Thickness</string>
     <string name="GetPocket">Get Pocket</string>
     <string name="title_activity_mode1">Mode1Activity</string>
     <string name="title_activity_mode2">Mode2Activity</string>
@@ -40,6 +41,7 @@
     <string name="VelocityText">Velocity:</string>
     <string name="setText">Set</string>
     <string name="getText">Get</string>
+    <string name="storeDataText">Store Data</string>
     <string-array name="velocityUnits">
         <item>m/s</item>
         <item>in/us</item>

@@ -37,13 +37,13 @@
         android:id="@+id/Mode1BackButton"
         android:clickable="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/GetValueOnPocketMikeScreenButton"
-        android:layout_alignStart="@+id/GetValueOnPocketMikeScreenButton" />
+        android:layout_alignRight="@+id/GetValueOnPocketMikeScreenButton"
+        android:layout_alignEnd="@+id/GetValueOnPocketMikeScreenButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/GetDataText"
+        android:text="@string/GetThicknessText"
         android:id="@+id/GetValueOnPocketMikeScreenButton"
         android:layout_alignTop="@+id/ChangeUnitsButton"
         android:layout_alignParentRight="true"
@@ -74,10 +74,10 @@
         android:layout_height="wrap_content"
         android:text="@string/updateCurrentLocationText"
         android:id="@+id/UpdateCurrentLocationButton"
-        android:layout_below="@+id/longitudeText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginBottom="100dp"
+        android:layout_above="@+id/Mode1BackButton"
+        android:layout_alignRight="@+id/Mode1BackButton"
+        android:layout_alignEnd="@+id/Mode1BackButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -85,19 +85,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/currentLocationText"
         android:id="@+id/currentLocationText"
-        android:textSize="30sp"
-        android:layout_below="@+id/ChangeUnitsButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="52dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/latitudeText"
-        android:id="@+id/latitudeText"
-        android:layout_below="@+id/longitudeText"
+        android:textSize="24sp"
+        android:layout_above="@+id/longitudeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -105,9 +94,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/latitudeText"
+        android:id="@+id/latitudeText"
+        android:layout_above="@+id/UpdateCurrentLocationButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="45dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/longitudeText"
         android:id="@+id/longitudeText"
-        android:layout_below="@+id/currentLocationText"
+        android:layout_above="@+id/latitudeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -132,15 +132,6 @@
         android:layout_alignLeft="@+id/UpdateCurrentLocationButton"
         android:layout_alignStart="@+id/UpdateCurrentLocationButton" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/GetPocket"
-        android:id="@+id/GetPocketButton"
-        android:layout_alignTop="@+id/Mode1BackButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,21 +139,10 @@
         android:text="@string/VelocityText"
         android:id="@+id/velocityTextView"
         android:textSize="24sp"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/UpdateCurrentLocationButton"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/ChangeUnitsButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/getText"
-        android:id="@+id/GetVelocityButton"
-        android:textSize="9sp"
-        android:layout_alignTop="@+id/setVelocityTextView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/velocityTextView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -174,5 +154,17 @@
         android:layout_alignRight="@+id/MeasurementText"
         android:layout_alignEnd="@+id/MeasurementText"
         android:text="@string/invalidVelocityNumbers" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/storeDataText"
+        android:id="@+id/StoreDataButton"
+        android:layout_above="@+id/Mode1BackButton"
+        android:layout_marginBottom="25dp"
+        android:layout_alignLeft="@+id/GetValueOnPocketMikeScreenButton"
+        android:layout_alignStart="@+id/GetValueOnPocketMikeScreenButton"
+        android:layout_alignRight="@+id/Mode1BackButton"
+        android:layout_alignEnd="@+id/Mode1BackButton" />
 
 </RelativeLayout>

@@ -256,6 +256,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
             btConnection.findDevice();
             btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
+                //When a message is recieved from connectedThread below is how to handle it
                 @Override
                 public void handleMessage(Message msg) {
                     if (btConnection.getIsBluetoothRunning()) {

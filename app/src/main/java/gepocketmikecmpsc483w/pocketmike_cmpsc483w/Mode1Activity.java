@@ -35,13 +35,12 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private BluetoothAdapter btAdapter;
 
     private String pocketMikeName = "PMike-00";
-    
+
     private Button Mode1BackButton;
     private Button GetValueOnPocketMikeScreenButton; //1 mm to 250 mm (0.040 inch to 9.999 inch) vaild ranges for pocketMike
     private Button ChangeUnitsButton;
     private Button UpdateCurrentLocationButton;
-    private Button GetVelocityButton;
-    private Button GetPocketButton;
+    private Button StoreDataButton;
     private TextView MeasurementNumbersText;
     private TextView unitsText;
 
@@ -72,11 +71,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         UpdateCurrentLocationButton = (Button) findViewById(R.id.UpdateCurrentLocationButton);
         UpdateCurrentLocationButton.setOnClickListener(this);
 
-        GetPocketButton = (Button) findViewById(R.id.GetPocketButton);
-        GetPocketButton.setOnClickListener(this);
-
-        GetVelocityButton = (Button) findViewById(R.id.GetVelocityButton);
-        GetVelocityButton.setOnClickListener(this);
+        StoreDataButton = (Button) findViewById(R.id.StoreDataButton);
+        StoreDataButton.setOnClickListener(this);
 
         //connect Text in layout to text in java file so we can edit them
         MeasurementNumbersText = (TextView) findViewById(R.id.MeasurementNumbersText);
@@ -95,7 +91,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
         }
 
-        //Run bluetooth stuff
+        //Start up Bluetooth code
         btConnection = new BluetoothConnection(pocketMikeName);
         Log.d("PocketMike_CMPSC483W", "Running Bluetooth stuff");
         // btConnection = new BluetoothConnection();
@@ -141,7 +137,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                     } else {
                         btConnection.setConnectedThreadCommand("un 00");
                         btConnection.sendCommand("un 00\r");
-
                     }
                 }
                 else
@@ -154,7 +149,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             else
             {
                 btConnection.turnOffEcho();
-
             }
         }
         else
@@ -162,39 +156,47 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(getApplicationContext(),
                     "Bluetooth is not currently running", Toast.LENGTH_SHORT)
                     .show();
-
         }
-
-        /*if ((unitsText.getText().toString()).equals("mm")) {
-            unitsText.setText("in");
-            MeasurementNumbersText.setText("0.000");
-        } else {
-
-            unitsText.setText("mm");
-            MeasurementNumbersText.setText("000");
-        }*/
 
     }
 
-    //right now it generates a random number that is supposed to be vaild pocketmike thicknessdata
+    //puts data into the database
+    private void StoreDataButtonOnClick()
+    {
+
+    }
+
+    //Gets the value of what is currently on the pocketMike's screen
     private void GetValueOnPocketMikeScreenButtonOnClick() {
-        currentValueOnScreen = 0;
-        if (((unitsText.getText().toString())).equals("mm")) {
-            int upper = 250;
-            int lower = 1;
-            currentValueOnScreen = (int) (Math.random() * (upper - lower)) + lower;
-            MeasurementNumbersText.setText(String.valueOf((int) currentValueOnScreen));
-        } else {
-            int upper = 9;
-            int lower = 0;
-            int integerValue = (int) (Math.random() * (upper - lower)) + lower;
-            currentValueOnScreen = Math.random();
-            if (currentValueOnScreen < 0.04 && integerValue == 0) {
-                currentValueOnScreen = 0.04;
+
+        Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
+        if(btConnection.getIsBluetoothRunning())
+        {
+            if(btConnection.getIsEchoOff()) {
+                if(isThreadFinished) {
+                    isThreadFinished = false;
+                    btConnection.setConnectedThreadCommand("md 0");
+                    btConnection.sendCommand("md 0\r");
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait until process has finished", Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
-            currentValueOnScreen = integerValue + currentValueOnScreen;
-            MeasurementNumbersText.setText(String.valueOf(roundToFourDecimals(currentValueOnScreen)));
+            else
+            {
+                btConnection.turnOffEcho();
+            }
         }
+        else
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
     }
 
 
@@ -202,41 +204,6 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     double roundToFourDecimals(double d) {
         DecimalFormat fourDForm = new DecimalFormat("#.####");
         return Double.valueOf(fourDForm.format(d));
-    }
-
-    //get the current units of the pocketMike then gets the velocity in those units
-    public void GetVelocityButtonOnClick()
-    {
-        if (btConnection.getIsBluetoothRunning()) {
-            if(btConnection.getIsEchoOff()) {
-                if (isThreadFinished)
-                {
-                    isThreadFinished = false;
-                    btConnection.setConnectedThreadCommand("un");
-                    btConnection.sendCommand("un\r");
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Please wait until process has finished", Toast.LENGTH_SHORT)
-                            .show();
-
-                }
-            }
-            else
-            {
-                btConnection.turnOffEcho();
-
-            }
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                    .show();
-
-        }
-
     }
 
     //is the action listener for all the buttons and calls correct function based on case
@@ -255,49 +222,12 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             case R.id.UpdateCurrentLocationButton:
                 UpdateCurrentLocationButtonOnClick();
                 break;
-            case R.id.GetPocketButton:
-                GetPocketButtonOnClick();
-                break;
-            case R.id.GetVelocityButton:
-                GetVelocityButtonOnClick();
+            case R.id.StoreDataButton:
+                StoreDataButtonOnClick();
                 break;
         }
     }
 
-    //Gets the value of what is currently on the pocketMike's screen
-    private void GetPocketButtonOnClick() {
-        Log.d("PocketMike_CMPSC483W", "Mode1Acitivity GetPocketButtonClick");
-        if(btConnection.getIsBluetoothRunning())
-        {
-            if(btConnection.getIsEchoOff()) {
-                if(isThreadFinished) {
-                    isThreadFinished = false;
-                    btConnection.setConnectedThreadCommand("md 0");
-                    btConnection.sendCommand("md 0\r");
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Please wait until process has finished", Toast.LENGTH_SHORT)
-                            .show();
-
-                }
-            }
-            else
-            {
-                btConnection.turnOffEcho();
-
-
-            }
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                    .show();
-
-        }
-    }
 
     //starts the bluetooth and sets up handler for when you want to send and recevice messages
     public void startBluetooth() {
@@ -371,6 +301,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         });
         btConnection.startReading();
     }
+
     private void UpdateCurrentLocationButtonOnClick() {
         findAndDisplayLocation();
     }
@@ -398,7 +329,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
+    //builds google API client so we can use google maps api
     protected synchronized void buildGoogleApiClient() {
         Log.d("PocketMike_CMPSC483W", "Building Google API Client");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -410,6 +341,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    //checks to see if google play services are running
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil
                 .isGooglePlayServicesAvailable(this);

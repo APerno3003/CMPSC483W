@@ -40,6 +40,7 @@ public class BluetoothConnection {
         adapter.startDiscovery();
 
     }
+    //used to connect to a bluetooth device that you know the name of
     public BluetoothConnection(String deviceName) {
         this.deviceName = deviceName;
         initAdapter();
@@ -57,14 +58,13 @@ public class BluetoothConnection {
     }
 
     public void startReading() {
-
-        //ConnectThread connectThread = new ConnectThread(this.device);
         connectThread = new ConnectThread(this.device);
         connectThread.setCommandProcessedHandler(this.commandProcessedHandler);
         connectThread.start();
 
     }
 
+    //used to discover bluetooth devices in the area
     public void findDevice() {
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
@@ -83,7 +83,7 @@ public class BluetoothConnection {
         }
     }
 
-
+    //if bluetooth is running close the connection
     public void closeBluetoothConnection(){
         if(isBluetoothRunning) {
             connectThread.getConnectedThread().cancel();
