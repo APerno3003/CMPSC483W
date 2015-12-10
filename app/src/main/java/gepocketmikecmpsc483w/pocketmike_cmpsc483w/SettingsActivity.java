@@ -167,11 +167,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         else
-           {
-               Toast.makeText(getApplicationContext(),
-                       "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                       .show();
-            }
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     private void setVelocityButtonOnClick(){
@@ -254,44 +254,44 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     public void startBluetooth() {
 
-            btConnection.findDevice();
-            btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
-                //When a message is recieved from connectedThread below is how to handle it
-                @Override
-                public void handleMessage(Message msg) {
-                    if (btConnection.getIsBluetoothRunning()) {
-                        switch (btConnection.getConnectedThreadCommand()) {
-                            case "bl 0":
-                                isThreadFinished = true;
-                                Log.d("PocketMike_CMPSC483W", "Turn off light command message returned");
-                                break;
-                            case "bl 1":
-                                isThreadFinished = true;
-                                Log.d("PocketMike_CMPSC483W", "Turn on light command message returned");
-                                break;
-                            case "velocityChanged":
-                                isThreadFinished = true;
-                                Log.d("PocketMike_CMPSC483W", "The velocity has been changed");
-                                break;
-                            case "e0":
-                                btConnection.setIsEchoOff(true);
-                                Log.d("PocketMike_CMPSC483W", "Echo turned off");
-                                Toast.makeText(getApplicationContext(),
-                                        "Please press the button again", Toast.LENGTH_SHORT)
-                                        .show();
-                                break;
-                            default:
-                                Log.d("PocketMike_CMPSC483W", "No command sent from settings menu");
-                        }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Bluetooth is not currently running", Toast.LENGTH_SHORT)
-                                .show();
+        btConnection.findDevice();
+        btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
+            //When a message is recieved from connectedThread below is how to handle it
+            @Override
+            public void handleMessage(Message msg) {
+                if (btConnection.getIsBluetoothRunning()) {
+                    switch (btConnection.getConnectedThreadCommand()) {
+                        case "bl 0":
+                            isThreadFinished = true;
+                            Log.d("PocketMike_CMPSC483W", "Turn off light command message returned");
+                            break;
+                        case "bl 1":
+                            isThreadFinished = true;
+                            Log.d("PocketMike_CMPSC483W", "Turn on light command message returned");
+                            break;
+                        case "velocityChanged":
+                            isThreadFinished = true;
+                            Log.d("PocketMike_CMPSC483W", "The velocity has been changed");
+                            break;
+                        case "e0":
+                            btConnection.setIsEchoOff(true);
+                            Log.d("PocketMike_CMPSC483W", "Echo turned off");
+                            Toast.makeText(getApplicationContext(),
+                                    "Please press the button again", Toast.LENGTH_SHORT)
+                                    .show();
+                            break;
+                        default:
+                            Log.d("PocketMike_CMPSC483W", "No command sent from settings menu");
                     }
+
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Bluetooth is not currently running", Toast.LENGTH_SHORT)
+                            .show();
                 }
-            });
-            btConnection.startReading();
+            }
+        });
+        btConnection.startReading();
     }
 
     @Override

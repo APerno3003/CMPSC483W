@@ -6,17 +6,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="gepocketmikecmpsc483w.pocketmike_cmpsc483w.Mode2Activity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/WorkInProgressText"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="163dp"
-        android:textSize="45sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -24,17 +13,34 @@
         android:text="@string/BackText"
         android:id="@+id/Mode2BackButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/listView"
+        android:layout_alignEnd="@+id/listView" />
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/Mode2Text"
-        android:id="@+id/Mode2Text"
-        android:textSize="40sp"
-        android:layout_below="@+id/textView3"
+        android:id="@+id/listView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/Mode2BackButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/DeleteText"
+        android:id="@+id/DeleteButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Export Data"
+        android:id="@+id/ExportButton"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

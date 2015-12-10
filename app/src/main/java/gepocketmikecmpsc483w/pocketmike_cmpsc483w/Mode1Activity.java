@@ -15,6 +15,8 @@ import android.view.View;
 import android.content.Context;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
+
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,10 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     private boolean isThreadFinished = true;
 
+    //Database from the DBAdapter class that was created
+    DBAdapter myDB;
+    private String[] data = null; //Used to store data into the database.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +78,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         UpdateCurrentLocationButton.setOnClickListener(this);
 
         StoreDataButton = (Button) findViewById(R.id.StoreDataButton);
+        openDB(); // Open the Database to be able to store the data
         StoreDataButton.setOnClickListener(this);
 
         //connect Text in layout to text in java file so we can edit them
@@ -120,6 +127,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         {
             btConnection.closeBluetoothConnection();
         }
+        myDB.close();
         finish();
     }
 
@@ -157,13 +165,37 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                     "Bluetooth is not currently running", Toast.LENGTH_SHORT)
                     .show();
         }
+        //Places the units into the data array for it to be stored in the database
+        if(data == null){
+            data = new String[5];
+            data[0] = String.valueOf(roundToFourDecimals(currentValueOnScreen));
+            data[1] = unitsText.getText().toString();
+        }
+        else{
+            data[0] = String.valueOf(roundToFourDecimals(currentValueOnScreen));
+            data[1] = unitsText.getText().toString();
+        }
 
     }
 
     //puts data into the database
     private void StoreDataButtonOnClick()
     {
+        Calendar c = Calendar.getInstance();
+        String date = c.get(Calendar.YEAR) + "/" + (c.get(Calendar.MONTH) + 1)
+                + "/" + c.get(Calendar.DAY_OF_MONTH);
+        String time = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
 
+        data[0] = MeasurementNumbersText.getText().toString();
+        data[1] = unitsText.getText().toString();
+        data[2] = setVelocityTextView.getText().toString();
+
+        //Places data into database.
+        myDB.insertRow(data[0], data[1], data[2], data[3], data[4], date, time);
+
+        Toast.makeText(getApplicationContext(),
+                "Stored data successfully", Toast.LENGTH_SHORT)
+                .show();
     }
 
     //Gets the value of what is currently on the pocketMike's screen
@@ -188,6 +220,16 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             else
             {
                 btConnection.turnOffEcho();
+            }
+            //Places the units into the data array for it to be stored in the database
+            if(data == null){
+                data = new String[5];
+                data[0] = String.valueOf(roundToFourDecimals(currentValueOnScreen));
+                data[1] = unitsText.getText().toString();
+            }
+            else{
+                data[0] = String.valueOf(roundToFourDecimals(currentValueOnScreen));
+                data[1] = unitsText.getText().toString();
             }
         }
         else
@@ -316,6 +358,19 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             valueOfLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
             valueOfLongitude.setText(String.valueOf(mLastLocation.getLongitude()));
             Log.d("PocketMike_CMPSC483W", "Current Location Found");
+
+            //See if data was already initialized to be stored, if not set an array to hold the
+            //data to be placed into the array for the location of the latitude and longitude.
+            if(data == null){
+                data = new String[5];
+                data[3] = String.valueOf(mLastLocation.getLatitude());
+                data[4] = String.valueOf(mLastLocation.getLongitude());
+            }
+            else{
+                data[3] = String.valueOf(mLastLocation.getLatitude());
+                data[4] = String.valueOf(mLastLocation.getLongitude());
+            }
+
         }
         else
         {
@@ -325,6 +380,18 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
             valueOfLatitude.setText(String.valueOf(defaultLatitude));
             valueOfLongitude.setText(String.valueOf(defaultLongitude));
             Log.d("PocketMike_CMPSC483W", "Couldn't Find Current Location");
+
+            //Since the current location could not be found place the default latitude and longitude values
+            //into the database
+            if(data == null){
+                data = new String[6];
+                data[3] = String.valueOf(defaultLatitude);
+                data[4] = String.valueOf(defaultLongitude);
+            }
+            else{
+                data[3] = String.valueOf(defaultLatitude);
+                data[4] = String.valueOf(defaultLongitude);
+            }
         }
 
     }
@@ -416,6 +483,12 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Used to allow the database to open from our DBAdapter class
+    private void openDB(){
+        myDB = new DBAdapter(this);
+        myDB.open();
     }
 
 }

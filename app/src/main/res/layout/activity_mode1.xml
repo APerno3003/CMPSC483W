@@ -74,10 +74,9 @@
         android:layout_height="wrap_content"
         android:text="@string/updateCurrentLocationText"
         android:id="@+id/UpdateCurrentLocationButton"
-        android:layout_marginBottom="100dp"
-        android:layout_above="@+id/Mode1BackButton"
-        android:layout_alignRight="@+id/Mode1BackButton"
-        android:layout_alignEnd="@+id/Mode1BackButton" />
+        android:layout_above="@+id/StoreDataButton"
+        android:layout_alignRight="@+id/StoreDataButton"
+        android:layout_alignEnd="@+id/StoreDataButton" />
 
     <TextView
         android:layout_width="wrap_content"

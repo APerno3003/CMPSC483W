@@ -42,6 +42,15 @@
     <string name="setText">Set</string>
     <string name="getText">Get</string>
     <string name="storeDataText">Store Data</string>
+    <string name="VelText">|Velocity|</string>
+    <string name="RowText">Row|</string>
+    <string name="UnitText">|Unit|</string>
+    <string name="VelUnitText">|Velocity Unit|</string>
+    <string name="DateText">|Date|</string>
+    <string name="TimeText">|Time</string>
+    <string name="ThicknessText">|Thickness|</string>
+    <string name="DeleteText">Delete Data</string>
+    <string name="ExportText">Export Data</string>
     <string-array name="velocityUnits">
         <item>m/s</item>
         <item>in/us</item>

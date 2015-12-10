@@ -189,7 +189,7 @@ public class ConnectedThread extends Thread {
             socket.close();
         } catch (IOException e) {
             Log.d("PocketMike_CMPSC483W", "Failed to close socket");
-             }
+        }
     }
 
 
