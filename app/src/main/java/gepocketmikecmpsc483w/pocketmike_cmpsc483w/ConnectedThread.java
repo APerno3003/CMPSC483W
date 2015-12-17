@@ -165,7 +165,8 @@ public class ConnectedThread extends Thread {
                     break;
                 default:
                     Log.d("PocketMike_CMPSC483W", "No Message read");
-
+                    msg = this.commandProcessedHandler.obtainMessage(1, "Test Failed");
+                    this.commandProcessedHandler.sendMessage(msg);
             }
 
         } catch (IOException e) {

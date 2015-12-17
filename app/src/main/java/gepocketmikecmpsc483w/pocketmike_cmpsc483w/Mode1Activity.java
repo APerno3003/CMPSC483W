@@ -182,9 +182,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     private void StoreDataButtonOnClick()
     {
         Calendar c = Calendar.getInstance();
-        String date = c.get(Calendar.YEAR) + "/" + (c.get(Calendar.MONTH) + 1)
-                + "/" + c.get(Calendar.DAY_OF_MONTH);
-        String time = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+        String date = (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + "/"  + c.get(Calendar.YEAR);
+        String time = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
 
         data[0] = MeasurementNumbersText.getText().toString();
         data[1] = unitsText.getText().toString();
@@ -274,7 +273,7 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
     //starts the bluetooth and sets up handler for when you want to send and recevice messages
     public void startBluetooth() {
 
-        btConnection.findDevice();
+        btConnection.findDevice(); //for this line of code to work properly the phone and device must be synced atleast one time prior to using the app
         btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -331,6 +330,8 @@ public class Mode1Activity extends AppCompatActivity implements View.OnClickList
                             break;
                         default:
                             Log.d("PocketMike_CMPSC483W", "No command sent");
+                            isThreadFinished = true;
+                            btConnection.setConnectedThreadCommand("XX"); // NULL COMMAND
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),

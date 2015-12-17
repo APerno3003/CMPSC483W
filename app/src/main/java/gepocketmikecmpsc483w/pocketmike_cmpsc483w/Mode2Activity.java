@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.inputmethodservice.Keyboard;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -112,10 +113,15 @@ public class Mode2Activity extends AppCompatActivity implements View.OnClickList
     //Latitude and longitude are stored but will be used to find the location of the site
     private void displayData(){
         Cursor cursor = myDb.getAllRows();
+
         String[] fromFieldNames = new String[] {DBAdapter.KEY_ROWID, DBAdapter.KEY_THICKNESS, DBAdapter.KEY_UNIT,
                 DBAdapter.KEY_VELOCITY, DBAdapter.KEY_DATE, DBAdapter.KEY_TIME};
+
         int toViewIDs [] = new int[] {R.id.RowTextView, R.id.ThicknessTextView, R.id.UnitTextView, R.id.VelocityTextView,
                 R.id.DateTextView, R.id.TimeTextView};
+
+
+
         //Allows us to be able to map the columns to for the cursor to the list view.
         SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item_layout, cursor, fromFieldNames, toViewIDs, 0);
         ListView myList = (ListView) findViewById(R.id.listView);
@@ -125,7 +131,7 @@ public class Mode2Activity extends AppCompatActivity implements View.OnClickList
     private void ExportButtonOnClick(){
         if(myDb.exportDB()){
             Toast.makeText(getApplicationContext(),
-                    "Exported Data Successfully to /storage/emulated/0", Toast.LENGTH_SHORT)
+                    "Exported Data Successfully" + (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)).toString(), Toast.LENGTH_SHORT)
                     .show();
         }
         else{

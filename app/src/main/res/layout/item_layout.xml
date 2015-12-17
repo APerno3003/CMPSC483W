@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
 
     <TextView
@@ -9,7 +12,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/RowText"
-        android:id="@+id/RowTextView" />
+        android:id="@+id/RowTextView"
+        android:layout_weight="0.11" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,27 +27,31 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/UnitText"
-        android:id="@+id/UnitTextView" />
+        android:id="@+id/UnitTextView"
+        android:layout_weight="0.15" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/VelText"
-        android:id="@+id/VelocityTextView" />
+        android:id="@+id/VelocityTextView"
+        android:layout_weight="0.15" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/DateText"
-        android:id="@+id/DateTextView" />
+        android:id="@+id/DateTextView"
+        android:layout_weight="0.16" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="46dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/TimeText"
-        android:id="@+id/TimeTextView" />
+        android:id="@+id/TimeTextView"
+        android:layout_weight="0.37" />
 
 </LinearLayout>

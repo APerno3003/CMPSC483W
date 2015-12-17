@@ -52,7 +52,7 @@ public class DBAdapter {
     //Database information:
     public static final String DATABASE_NAME = "dbPocketMike.sqlite";
     public static final String DATABASE_TABLE = "mainPocketMike";
-    public static int DATABASE_VERSION = 1; //If any changes are made increment this value
+    public static int DATABASE_VERSION = 2; //If any changes are made increment this value
 
     //SQL statement to create the database
     private static final String DATABASE_CREATE_SQL =
@@ -176,7 +176,8 @@ public class DBAdapter {
     public boolean exportDB(){
         File dbFile = getDBpath();
         DBAdapter dbAdapter = new DBAdapter(context);
-        File exportDirectory = new File(Environment.getExternalStorageDirectory(), "");
+        //File exportDirectory = new File(Environment.getExternalStorageDirectory(), "");
+        File exportDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         if (!exportDirectory.exists())
         {
             exportDirectory.mkdir();

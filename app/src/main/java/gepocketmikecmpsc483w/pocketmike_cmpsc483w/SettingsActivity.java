@@ -254,7 +254,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     public void startBluetooth() {
 
-        btConnection.findDevice();
+        btConnection.findDevice(); //for this line of code to work properly the phone and device must be synced atleast one time prior to using the app
         btConnection.setCommandProcessedHandler(new Handler(Looper.getMainLooper()) {
             //When a message is recieved from connectedThread below is how to handle it
             @Override
@@ -281,7 +281,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                     .show();
                             break;
                         default:
-                            Log.d("PocketMike_CMPSC483W", "No command sent from settings menu");
+                            Log.d("PocketMike_CMPSC483W", "No command returned from settings menu");
+                            btConnection.setConnectedThreadCommand("XX"); // NULL COMMAND
+                            isThreadFinished = true;
+
                     }
 
                 } else {
